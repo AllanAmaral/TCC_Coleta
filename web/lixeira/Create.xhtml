@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{conf.CreateLixeiraTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{conf.CreateLixeiraLabel_capacidadeLixeiraKg}" for="capacidadeLixeiraKg" />
+                    <h:inputText id="capacidadeLixeiraKg" value="#{lixeiraController.selected.capacidadeLixeiraKg}" title="#{conf.CreateLixeiraTitle_capacidadeLixeiraKg}" />
+                    <h:outputLabel value="#{conf.CreateLixeiraLabel_capacidadeLixeiraLt}" for="capacidadeLixeiraLt" />
+                    <h:inputText id="capacidadeLixeiraLt" value="#{lixeiraController.selected.capacidadeLixeiraLt}" title="#{conf.CreateLixeiraTitle_capacidadeLixeiraLt}" />
+                    <h:outputLabel value="#{conf.CreateLixeiraLabel_latitude}" for="latitude" />
+                    <h:inputText id="latitude" value="#{lixeiraController.selected.latitude}" title="#{conf.CreateLixeiraTitle_latitude}" />
+                    <h:outputLabel value="#{conf.CreateLixeiraLabel_longitude}" for="longitude" />
+                    <h:inputText id="longitude" value="#{lixeiraController.selected.longitude}" title="#{conf.CreateLixeiraTitle_longitude}" />
+                </h:panelGrid>
+                <br />
+                <h:commandButton action="#{lixeiraController.create}" value="#{conf.CreateLixeiraSaveLink}"/>
+                <br />
+                <br />
+                <h:commandLink action="#{lixeiraController.prepareList}" value="#{conf.CreateLixeiraShowAllLink}" immediate="true"/>
+                &nbsp;
+                <h:link outcome="/index" value="#{conf.CreateLixeiraIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

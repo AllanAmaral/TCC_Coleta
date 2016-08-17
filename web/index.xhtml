@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="Coleta Lixo"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <div id="mapa" style="height: 600px; width: 800px"></div>
+                <br />
+                <h:commandButton value="Carregar Pontos" action="#{lixeiraController.carregarPontosLixeiras}"/>
+                <br />
+                <br />
+                <h:link outcome="/caminhao/List" value="Caminhões" />
+                &nbsp;
+                <h:link outcome="/motorista/List" value="Motoristas"/>
+                &nbsp;
+                <h:link outcome="/lixeira/List" value="Lixeiras"/>
+                &nbsp;
+                <h:link outcome="/historicoColeta/List" value="Históricos de Coletas"/>
+                &nbsp;
+                <h:link outcome="/caminhaoMotorista/List" value="Caminhões/Motoristas"/>
+                &nbsp;
+                <h:link outcome="/caminhaoLixeira/List" value="Caminhões/Lixeiras"/>
+            </h:form>
+            <script src="js/jquery.min.js"></script>
+            <!-- Maps API Javascript -->
+            <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDElz8A2mG5HykMbPdDFsQNAeabVErPXek&amp;sensor=false"></script>
+            <!-- Caixa de informação -->
+            <script src="js/infobox.js"></script>
+            <!-- Agrupamento dos marcadores -->
+            <script src="js/markerclusterer.js"></script>
+            <!-- Arquivo de inicialização do mapa -->
+            <script src="js/mapa.js"></script>
+         </ui:define>
+    </ui:composition>
+
+</html>
+

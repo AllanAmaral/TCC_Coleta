@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{conf.ViewLixeiraTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{conf.ViewLixeiraLabel_idLixeira}"/>
+                    <h:outputText value="#{lixeiraController.selected.idLixeira}" title="#{conf.ViewLixeiraTitle_idLixeira}"/>
+                    <h:outputText value="#{conf.ViewLixeiraLabel_capacidadeLixeiraKg}"/>
+                    <h:outputText value="#{lixeiraController.selected.capacidadeLixeiraKg}" title="#{conf.ViewLixeiraTitle_capacidadeLixeiraKg}"/>
+                    <h:outputText value="#{conf.ViewLixeiraLabel_capacidadeLixeiraLt}"/>
+                    <h:outputText value="#{lixeiraController.selected.capacidadeLixeiraLt}" title="#{conf.ViewLixeiraTitle_capacidadeLixeiraLt}"/>
+                    <h:outputText value="#{conf.ViewLixeiraLabel_coletadoLixeiraKg}"/>
+                    <h:outputText value="#{lixeiraController.selected.coletadoLixeiraKg}" title="#{conf.ViewLixeiraTitle_coletadoLixeiraKg}"/>
+                    <h:outputText value="#{conf.ViewLixeiraLabel_coletadoLixeiraLt}"/>
+                    <h:outputText value="#{lixeiraController.selected.coletadoLixeiraLt}" title="#{conf.ViewLixeiraTitle_coletadoLixeiraLt}"/>
+                    <h:outputText value="#{conf.ViewLixeiraLabel_latitude}"/>
+                    <h:outputText value="#{lixeiraController.selected.latitude}" title="#{conf.ViewLixeiraTitle_latitude}"/>
+                    <h:outputText value="#{conf.ViewLixeiraLabel_longitude}"/>
+                    <h:outputText value="#{lixeiraController.selected.longitude}" title="#{conf.ViewLixeiraTitle_longitude}"/>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{lixeiraController.destroyAndView}" value="#{conf.ViewLixeiraDestroyLink}"/>
+                &nbsp;
+                <h:link outcome="Edit" value="#{conf.ViewLixeiraEditLink}"/>
+                &nbsp;
+                <h:commandLink action="#{lixeiraController.prepareCreate}" value="#{conf.ViewLixeiraCreateLink}" />
+                &nbsp;
+                <h:commandLink action="#{lixeiraController.prepareList}" value="#{conf.ViewLixeiraShowAllLink}"/>
+                &nbsp;
+                <h:link outcome="/index" value="#{conf.ViewLixeiraIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

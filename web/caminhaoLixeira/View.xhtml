@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{conf.ViewCaminhaoLixeiraTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{conf.ViewCaminhaoLixeiraLabel_idCaminhaoLixeira}"/>
+                    <h:outputText value="#{caminhaoLixeiraController.selected.idCaminhaoLixeira}" title="#{conf.ViewCaminhaoLixeiraTitle_idCaminhaoLixeira}"/>
+                    <h:outputText value="#{conf.ViewCaminhaoLixeiraLabel_idCaminhao}"/>
+                    <h:outputText value="#{caminhaoLixeiraController.selected.idCaminhao}" title="#{conf.ViewCaminhaoLixeiraTitle_idCaminhao}"/>
+                    <h:outputText value="#{conf.ViewCaminhaoLixeiraLabel_idLixeira}"/>
+                    <h:outputText value="#{caminhaoLixeiraController.selected.idLixeira}" title="#{conf.ViewCaminhaoLixeiraTitle_idLixeira}"/>
+                    <h:outputText value="#{conf.ViewCaminhaoLixeiraLabel_dataHora}"/>
+                    <h:outputText value="#{caminhaoLixeiraController.selected.dataHora}" title="#{conf.ViewCaminhaoLixeiraTitle_dataHora}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                </h:panelGrid>
+                <br />
+                <br />
+                <h:commandLink action="#{caminhaoLixeiraController.prepareList}" value="#{conf.ViewCaminhaoLixeiraShowAllLink}"/>
+                &nbsp;
+                <h:link outcome="/index" value="#{conf.ViewCaminhaoLixeiraIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

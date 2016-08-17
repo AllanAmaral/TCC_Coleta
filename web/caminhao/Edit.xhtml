@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{conf.EditCaminhaoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{conf.EditCaminhaoLabel_idCaminhao}" for="idCaminhao" />
+                    <h:inputText id="idCaminhao" value="#{caminhaoController.selected.idCaminhao}" title="#{conf.EditCaminhaoTitle_idCaminhao}" required="true" requiredMessage="#{conf.EditCaminhaoRequiredMessage_idCaminhao}"/>
+                    <h:outputLabel value="#{conf.EditCaminhaoLabel_capacidadeCaminhaoKg}" for="capacidadeCaminhaoKg" />
+                    <h:inputText id="capacidadeCaminhaoKg" value="#{caminhaoController.selected.capacidadeCaminhaoKg}" title="#{conf.EditCaminhaoTitle_capacidadeCaminhaoKg}" />
+                    <h:outputLabel value="#{conf.EditCaminhaoLabel_capacidadeCaminhaoLt}" for="capacidadeCaminhaoLt" />
+                    <h:inputText id="capacidadeCaminhaoLt" value="#{caminhaoController.selected.capacidadeCaminhaoLt}" title="#{conf.EditCaminhaoTitle_capacidadeCaminhaoLt}" />
+                </h:panelGrid>
+                <br />
+                <h:commandButton action="#{caminhaoController.update}" value="#{conf.EditCaminhaoSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{conf.EditCaminhaoViewLink}"/>
+                &nbsp;
+                <h:commandLink action="#{caminhaoController.prepareList}" value="#{conf.EditCaminhaoShowAllLink}" immediate="true"/>
+                &nbsp;
+                <h:link outcome="/index" value="#{conf.EditCaminhaoIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

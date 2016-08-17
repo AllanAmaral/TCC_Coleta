@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{conf.ViewCaminhaoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{conf.ViewCaminhaoLabel_idCaminhao}"/>
+                    <h:outputText value="#{caminhaoController.selected.idCaminhao}" title="#{conf.ViewCaminhaoTitle_idCaminhao}"/>
+                    <h:outputText value="#{conf.ViewCaminhaoLabel_capacidadeCaminhaoKg}"/>
+                    <h:outputText value="#{caminhaoController.selected.capacidadeCaminhaoKg}" title="#{conf.ViewCaminhaoTitle_capacidadeCaminhaoKg}"/>
+                    <h:outputText value="#{conf.ViewCaminhaoLabel_capacidadeCaminhaoLt}"/>
+                    <h:outputText value="#{caminhaoController.selected.capacidadeCaminhaoLt}" title="#{conf.ViewCaminhaoTitle_capacidadeCaminhaoLt}"/>
+                    <h:outputText value="#{conf.ViewCaminhaoLabel_coletadoCaminhaoKg}"/>
+                    <h:outputText value="#{caminhaoController.selected.coletadoCaminhaoKg}" title="#{conf.ViewCaminhaoTitle_coletadoCaminhaoKg}"/>
+                    <h:outputText value="#{conf.ViewCaminhaoLabel_coletadoCaminhaoLt}"/>
+                    <h:outputText value="#{caminhaoController.selected.coletadoCaminhaoLt}" title="#{conf.ViewCaminhaoTitle_coletadoCaminhaoLt}"/>
+                </h:panelGrid>
+                <br />
+                <br />
+                <h:commandLink action="#{caminhaoController.destroyAndView}" value="#{conf.ViewCaminhaoDestroyLink}"/>
+                &nbsp;
+                <h:link outcome="Edit" value="#{conf.ViewCaminhaoEditLink}"/>
+                &nbsp;
+                <h:commandLink action="#{caminhaoController.prepareCreate}" value="#{conf.ViewCaminhaoCreateLink}" />
+                &nbsp;
+                <h:commandLink action="#{caminhaoController.prepareList}" value="#{conf.ViewCaminhaoShowAllLink}"/>
+                &nbsp;
+                <h:link outcome="/index" value="#{conf.ViewCaminhaoIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

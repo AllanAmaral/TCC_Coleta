@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{conf.ListCaminhaoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="jsfcrud_list_form">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="#{conf.ListCaminhaoEmpty}" rendered="#{caminhaoController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{caminhaoController.items.rowCount > 0}">
+                    <h:outputText value="#{caminhaoController.pagination.pageFirstItem + 1}..#{caminhaoController.pagination.pageLastItem + 1}/#{caminhaoController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{caminhaoController.previous}" value="#{conf.Previous} #{caminhaoController.pagination.pageSize}" rendered="#{caminhaoController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{caminhaoController.next}" value="#{conf.Next} #{caminhaoController.pagination.pageSize}" rendered="#{caminhaoController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{caminhaoController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListCaminhaoTitle_idCaminhao}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.idCaminhao}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListCaminhaoTitle_capacidadeCaminhaoKg}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.capacidadeCaminhaoKg}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListCaminhaoTitle_capacidadeCaminhaoLt}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.capacidadeCaminhaoLt}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListCaminhaoTitle_coletadoCaminhaoKg}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.coletadoCaminhaoKg}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListCaminhaoTitle_coletadoCaminhaoLt}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.coletadoCaminhaoLt}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{caminhaoController.prepareView}" value="#{conf.ListCaminhaoViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{caminhaoController.prepareEdit}" value="#{conf.ListCaminhaoEditLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{caminhaoController.destroy}" value="#{conf.ListCaminhaoDestroyLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <br />
+                <h:commandLink action="#{caminhaoController.prepareCreate}" value="#{conf.ListCaminhaoCreateLink}"/>
+                &nbsp;
+                <h:link outcome="/index" value="#{conf.ListCaminhaoIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

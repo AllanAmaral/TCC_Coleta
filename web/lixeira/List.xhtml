@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{conf.ListLixeiraTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="jsfcrud_list_form">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="#{conf.ListLixeiraEmpty}" rendered="#{lixeiraController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{lixeiraController.items.rowCount > 0}">
+                    <h:outputText value="#{lixeiraController.pagination.pageFirstItem + 1}..#{lixeiraController.pagination.pageLastItem + 1}/#{lixeiraController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{lixeiraController.previous}" value="#{conf.Previous} #{lixeiraController.pagination.pageSize}" rendered="#{lixeiraController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{lixeiraController.next}" value="#{conf.Next} #{lixeiraController.pagination.pageSize}" rendered="#{lixeiraController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{lixeiraController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListLixeiraTitle_idLixeira}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.idLixeira}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListLixeiraTitle_capacidadeLixeiraKg}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.capacidadeLixeiraKg}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListLixeiraTitle_capacidadeLixeiraLt}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.capacidadeLixeiraLt}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListLixeiraTitle_coletadoLixeiraKg}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.coletadoLixeiraKg}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListLixeiraTitle_coletadoLixeiraLt}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.coletadoLixeiraLt}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListLixeiraTitle_latitude}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.latitude}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListLixeiraTitle_longitude}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.longitude}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{lixeiraController.prepareView}" value="#{conf.ListLixeiraViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{lixeiraController.prepareEdit}" value="#{conf.ListLixeiraEditLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{lixeiraController.destroy}" value="#{conf.ListLixeiraDestroyLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <h:commandLink action="#{lixeiraController.prepareCreate}" value="#{conf.ListLixeiraCreateLink}"/>
+                &nbsp;
+                <h:link outcome="/index" value="#{conf.ListLixeiraIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>
