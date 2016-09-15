@@ -14,9 +14,38 @@
                 <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
             </h:panelGroup>
             <h:form>
-                <div id="mapa" style="height: 600px; width: 800px"></div>
+                <table style="width:100%;">
+                    <tr>
+                        <th style="width:60%">      
+                           <div id="mapa" style="height: 500px; width: 700px"></div>
+                        </th>
+                        <th>
+                            <table style="width:100%;text-align: left;" >
+                                <tr style="height: 300px;"></tr>
+                                <tr>
+                                    <th>
+                                        <h:graphicImage library="img" name="lixeira-azul-icon.png" />
+                                        Nível Baixo: 0% - 30%
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <h:graphicImage library="img" name="lixeira-amarela-icon.png" />
+                                        Nível Médio: 30% - 70%
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <h:graphicImage library="img" name="lixeira-vermelha-icon.png" />
+                                        Nível Alto: 70% - 100%
+                                    </th>
+                                </tr>
+                            </table> 
+                        </th>
+                   </tr>
+                </table>
                 <br />
-                <h:commandButton value="Carregar Pontos" action="#{lixeiraController.carregarPontosLixeiras}"/>
+                <h:link outcome="/index" value="Carregar Pontos" onclick="#{lixeiraController.carregarPontosLixeiras()}" style="color:#af0000;border-width: 1; border: solid; text-decoration: none;"/>
                 <br />
                 <br />
                 <h:link outcome="/caminhao/List" value="Caminhões" />
@@ -36,8 +65,6 @@
             <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDElz8A2mG5HykMbPdDFsQNAeabVErPXek&amp;sensor=false"></script>
             <!-- Caixa de informação -->
             <script src="js/infobox.js"></script>
-            <!-- Agrupamento dos marcadores -->
-            <script src="js/markerclusterer.js"></script>
             <!-- Arquivo de inicialização do mapa -->
             <script src="js/mapa.js"></script>
          </ui:define>

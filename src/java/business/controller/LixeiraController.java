@@ -237,30 +237,55 @@ public class LixeiraController implements Serializable {
 
     }
     
+    public String getImagemStatus(Lixeira lixeira) {
+        String img = null;
+        switch (getStatus(lixeira)) {
+            case 1:
+                img = "lixeira-vermelha-icon.png";
+                break;
+            case 2:
+                img = "lixeira-amarela-icon.png";
+                break;
+            case 3:
+                img = "lixeira-azul-icon.png";
+                break;
+        }
+        return img;
+    }
+    
+    private int getStatus(Lixeira lixeira) { 
+        int cor = 3;
+        
+        if (lixeira == null) return cor;
+        
+        if (lixeira.getColetadoLixeiraKg()
+                    .compareTo(lixeira.getCapacidadeLixeiraKg()
+                            .multiply(new BigDecimal(0.3))) < 1)
+            cor = 3;
+        if ((lixeira.getColetadoLixeiraKg()
+                .compareTo(lixeira.getCapacidadeLixeiraKg()
+                        .multiply(new BigDecimal(0.7))) < 1)
+            && (lixeira.getColetadoLixeiraKg()
+                .compareTo(lixeira.getCapacidadeLixeiraKg()
+                        .multiply(new BigDecimal(0.3))) > -1))
+            cor = 2;
+        if (lixeira.getColetadoLixeiraKg()
+                .compareTo(lixeira.getCapacidadeLixeiraKg()
+                        .multiply(new BigDecimal(0.7))) > -1)
+            cor = 1;
+        return cor;
+    }
+    
     public void carregarPontosLixeiras() {
         try {
             List<Lixeira> lixeiras = getFacade().findAll();
-            FileOutputStream fos = new FileOutputStream("C:/Users/allan/Documents/GitHub/TCC_Coleta/web/js/pontos.json");
+            FileOutputStream fos = new FileOutputStream("C:/Users/allan.amaral/Documents/GitHub/TCC_Coleta/web/js/pontos.json");
             JsonGenerator geradorJson = Json.createGenerator(fos);
-            int cor = 1;
+            int cor;
             
             geradorJson.writeStartArray();
             for (Lixeira lixeira : lixeiras) {
-                if (lixeira.getColetadoLixeiraKg()
-                        .compareTo(lixeira.getCapacidadeLixeiraKg()
-                                .multiply(new BigDecimal(0.3))) < 1)
-                    cor = 3;
-                if ((lixeira.getColetadoLixeiraKg()
-                        .compareTo(lixeira.getCapacidadeLixeiraKg()
-                                .multiply(new BigDecimal(0.7))) < 1)
-                    && (lixeira.getColetadoLixeiraKg()
-                        .compareTo(lixeira.getCapacidadeLixeiraKg()
-                                .multiply(new BigDecimal(0.3))) > -1))
-                    cor = 2;
-                if (lixeira.getColetadoLixeiraKg()
-                        .compareTo(lixeira.getCapacidadeLixeiraKg()
-                                .multiply(new BigDecimal(0.7))) > -1)
-                    cor = 1;
+                cor = getStatus(lixeira);
                 
                 // começando a escrever o objeto JSON e então as propriedades, por fim fecha o objeto
                 geradorJson.writeStartObject()
@@ -268,10 +293,10 @@ public class LixeiraController implements Serializable {
                         .write("Cor", cor)
                         .write("Latitude", lixeira.getLatitude())
                         .write("Longitude", lixeira.getLongitude())
-                        .write("Capacidade Kg", lixeira.getCapacidadeLixeiraKg())
-                        .write("Capacidade Lt", lixeira.getCapacidadeLixeiraLt())
-                        .write("Coletado Kg", lixeira.getColetadoLixeiraKg())
-                        .write("Coletado Lt", lixeira.getColetadoLixeiraLt())
+                        .write("Descricao", "Capacidade Kg: " + lixeira.getCapacidadeLixeiraKg()
+                                            + "\n" + "Capacidade Lt: " + lixeira.getCapacidadeLixeiraLt()
+                                            + "\n" + "Coletado Kg: " + lixeira.getColetadoLixeiraKg()
+                                            + "\n" + "Coletado Lt: " + lixeira.getColetadoLixeiraLt())
                         .writeEnd();
             }
 
