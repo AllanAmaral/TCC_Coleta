@@ -21,7 +21,9 @@ import javax.json.stream.JsonGenerator;
 @Named("indexController")
 @SessionScoped
 public class IndexController implements Serializable {
-
+    
+    private Integer idLixeira;
+    private BigDecimal valorColetado;
     @EJB
     private dao.LixeiraFacade ejbFacade;
 
@@ -30,6 +32,22 @@ public class IndexController implements Serializable {
 
     private LixeiraFacade getFacade() {
         return ejbFacade;
+    }
+
+    public Integer getIdLixeira() {
+        return idLixeira;
+    }
+
+    public void setIdLixeira(Integer idLixeira) {
+        this.idLixeira = idLixeira;
+    }
+
+    public BigDecimal getValorColetado() {
+        return valorColetado;
+    }
+
+    public void setValorColetado(BigDecimal valorColetado) {
+        this.valorColetado = valorColetado;
     }
     
     public String getImagemStatus(Lixeira lixeira) {
