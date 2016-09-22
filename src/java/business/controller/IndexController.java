@@ -9,7 +9,9 @@ import java.io.InputStream;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -89,8 +91,32 @@ public class IndexController implements Serializable {
         return cor;
     }
     
+    public void randomValoresLixeiras() {
+        Integer min = ejbFacade.minId();
+        Integer max = ejbFacade.maxId();
+        Lixeira lixeira = ejbFacade.find((int) (Math.floor(Math.random() * (max - min + 1)) + min));
+        BigDecimal valorColetado = lixeira.getColetadoLixeiraKg();
+        valorColetado = valorColetado.add(new BigDecimal((Math.floor(Math.random() 
+                * (lixeira.getCapacidadeLixeiraKg().subtract(valorColetado)).doubleValue() -  1))));
+        lixeira.setColetadoLixeiraKg(valorColetado);
+        ejbFacade.edit(lixeira);
+        
+        carregarPontosLixeiras();
+    }
+    
     public void carregarPontosLixeiras() {
         try {
+            if (idLixeira != null && valorColetado != null) {
+                Lixeira lixeira = ejbFacade.find(idLixeira);
+                if (lixeira != null) {
+                    valorColetado = valorColetado.add(lixeira.getColetadoLixeiraKg());
+                    if (valorColetado.compareTo(lixeira.getCapacidadeLixeiraKg()) < 1) {
+                        lixeira.setColetadoLixeiraKg(valorColetado);
+                        ejbFacade.edit(lixeira);
+                    }
+                }
+            }
+            
             List<Lixeira> lixeiras = getFacade().findAll();
             //FileOutputStream fos = new FileOutputStream("C:/Users/allan.amaral/Documents/GitHub/TCC_Coleta/web/js/pontos.json");
             String file = FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
