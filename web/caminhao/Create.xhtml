@@ -19,8 +19,6 @@
                     <h:inputText id="idCaminhao" value="#{caminhaoController.selected.idCaminhao}" title="#{conf.CreateCaminhaoTitle_idCaminhao}" required="true" requiredMessage="#{conf.CreateCaminhaoRequiredMessage_idCaminhao}"/>
                     <h:outputLabel value="#{conf.CreateCaminhaoLabel_capacidadeCaminhaoKg}" for="capacidadeCaminhaoKg" />
                     <h:inputText id="capacidadeCaminhaoKg" value="#{caminhaoController.selected.capacidadeCaminhaoKg}" title="#{conf.CreateCaminhaoTitle_capacidadeCaminhaoKg}" />
-                    <h:outputLabel value="#{conf.CreateCaminhaoLabel_capacidadeCaminhaoLt}" for="capacidadeCaminhaoLt" />
-                    <h:inputText id="capacidadeCaminhaoLt" value="#{caminhaoController.selected.capacidadeCaminhaoLt}" title="#{conf.CreateCaminhaoTitle_capacidadeCaminhaoLt}" />
                 </h:panelGrid>
                 <br />
                 <h:commandButton action="#{caminhaoController.create}" value="#{conf.CreateCaminhaoSaveLink}"/>

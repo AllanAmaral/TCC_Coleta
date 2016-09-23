@@ -34,7 +34,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "HistoricoColeta.findByIdLixeira", query = "SELECT h FROM HistoricoColeta h WHERE h.idLixeira = :idLixeira"),
     @NamedQuery(name = "HistoricoColeta.findByIdCaminhaoMotorista", query = "SELECT h FROM HistoricoColeta h WHERE h.idCaminhaoMotorista = :idCaminhaoMotorista"),
     @NamedQuery(name = "HistoricoColeta.findByColetadoLixeiraKg", query = "SELECT h FROM HistoricoColeta h WHERE h.coletadoLixeiraKg = :coletadoLixeiraKg"),
-    @NamedQuery(name = "HistoricoColeta.findByColetadoLixeiraLt", query = "SELECT h FROM HistoricoColeta h WHERE h.coletadoLixeiraLt = :coletadoLixeiraLt"),
     @NamedQuery(name = "HistoricoColeta.findByDataHora", query = "SELECT h FROM HistoricoColeta h WHERE h.dataHora = :dataHora")})
 public class HistoricoColeta implements Serializable {
 
@@ -51,8 +50,8 @@ public class HistoricoColeta implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "COLETADO_LIXEIRA_KG")
     private BigDecimal coletadoLixeiraKg;
-    @Column(name = "COLETADO_LIXEIRA_LT")
-    private BigDecimal coletadoLixeiraLt;
+    @Column(name = "CHEIO_VOLUME")
+    private String cheioVolume;
     @Column(name = "DATA_HORA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataHora;
@@ -96,12 +95,12 @@ public class HistoricoColeta implements Serializable {
         this.coletadoLixeiraKg = coletadoLixeiraKg;
     }
 
-    public BigDecimal getColetadoLixeiraLt() {
-        return coletadoLixeiraLt;
+    public String getCheioVolume() {
+        return cheioVolume;
     }
 
-    public void setColetadoLixeiraLt(BigDecimal coletadoLixeiraLt) {
-        this.coletadoLixeiraLt = coletadoLixeiraLt;
+    public void setCheioVolume(String cheioVolume) {
+        this.cheioVolume = cheioVolume;
     }
 
     public Date getDataHora() {

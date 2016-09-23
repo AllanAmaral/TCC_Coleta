@@ -29,9 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Caminhao.findAll", query = "SELECT c FROM Caminhao c"),
     @NamedQuery(name = "Caminhao.findByIdCaminhao", query = "SELECT c FROM Caminhao c WHERE c.idCaminhao = :idCaminhao"),
     @NamedQuery(name = "Caminhao.findByCapacidadeCaminhaoKg", query = "SELECT c FROM Caminhao c WHERE c.capacidadeCaminhaoKg = :capacidadeCaminhaoKg"),
-    @NamedQuery(name = "Caminhao.findByCapacidadeCaminhaoLt", query = "SELECT c FROM Caminhao c WHERE c.capacidadeCaminhaoLt = :capacidadeCaminhaoLt"),
-    @NamedQuery(name = "Caminhao.findByColetadoCaminhaoKg", query = "SELECT c FROM Caminhao c WHERE c.coletadoCaminhaoKg = :coletadoCaminhaoKg"),
-    @NamedQuery(name = "Caminhao.findByColetadoCaminhaoLt", query = "SELECT c FROM Caminhao c WHERE c.coletadoCaminhaoLt = :coletadoCaminhaoLt")})
+    @NamedQuery(name = "Caminhao.findByColetadoCaminhaoKg", query = "SELECT c FROM Caminhao c WHERE c.coletadoCaminhaoKg = :coletadoCaminhaoKg")})
 public class Caminhao implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,12 +42,8 @@ public class Caminhao implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "CAPACIDADE_CAMINHAO_KG")
     private BigDecimal capacidadeCaminhaoKg;
-    @Column(name = "CAPACIDADE_CAMINHAO_LT")
-    private BigDecimal capacidadeCaminhaoLt;
     @Column(name = "COLETADO_CAMINHAO_KG")
     private BigDecimal coletadoCaminhaoKg;
-    @Column(name = "COLETADO_CAMINHAO_LT")
-    private BigDecimal coletadoCaminhaoLt;
 
     public Caminhao() {
     }
@@ -74,28 +68,12 @@ public class Caminhao implements Serializable {
         this.capacidadeCaminhaoKg = capacidadeCaminhaoKg;
     }
 
-    public BigDecimal getCapacidadeCaminhaoLt() {
-        return capacidadeCaminhaoLt;
-    }
-
-    public void setCapacidadeCaminhaoLt(BigDecimal capacidadeCaminhaoLt) {
-        this.capacidadeCaminhaoLt = capacidadeCaminhaoLt;
-    }
-
     public BigDecimal getColetadoCaminhaoKg() {
         return coletadoCaminhaoKg;
     }
 
     public void setColetadoCaminhaoKg(BigDecimal coletadoCaminhaoKg) {
         this.coletadoCaminhaoKg = coletadoCaminhaoKg;
-    }
-
-    public BigDecimal getColetadoCaminhaoLt() {
-        return coletadoCaminhaoLt;
-    }
-
-    public void setColetadoCaminhaoLt(BigDecimal coletadoCaminhaoLt) {
-        this.coletadoCaminhaoLt = coletadoCaminhaoLt;
     }
 
     @Override

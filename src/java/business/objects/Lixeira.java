@@ -29,9 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Lixeira.findAll", query = "SELECT l FROM Lixeira l"),
     @NamedQuery(name = "Lixeira.findByIdLixeira", query = "SELECT l FROM Lixeira l WHERE l.idLixeira = :idLixeira"),
     @NamedQuery(name = "Lixeira.findByCapacidadeLixeiraKg", query = "SELECT l FROM Lixeira l WHERE l.capacidadeLixeiraKg = :capacidadeLixeiraKg"),
-    @NamedQuery(name = "Lixeira.findByCapacidadeLixeiraLt", query = "SELECT l FROM Lixeira l WHERE l.capacidadeLixeiraLt = :capacidadeLixeiraLt"),
     @NamedQuery(name = "Lixeira.findByColetadoLixeiraKg", query = "SELECT l FROM Lixeira l WHERE l.coletadoLixeiraKg = :coletadoLixeiraKg"),
-    @NamedQuery(name = "Lixeira.findByColetadoLixeiraLt", query = "SELECT l FROM Lixeira l WHERE l.coletadoLixeiraLt = :coletadoLixeiraLt"),
     @NamedQuery(name = "Lixeira.findByLatitude", query = "SELECT l FROM Lixeira l WHERE l.latitude = :latitude"),
     @NamedQuery(name = "Lixeira.findByLongitude", query = "SELECT l FROM Lixeira l WHERE l.longitude = :longitude")})
 public class Lixeira implements Serializable {
@@ -45,17 +43,15 @@ public class Lixeira implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "CAPACIDADE_LIXEIRA_KG")
     private BigDecimal capacidadeLixeiraKg;
-    @Column(name = "CAPACIDADE_LIXEIRA_LT")
-    private BigDecimal capacidadeLixeiraLt;
     @Column(name = "COLETADO_LIXEIRA_KG")
     private BigDecimal coletadoLixeiraKg;
-    @Column(name = "COLETADO_LIXEIRA_LT")
-    private BigDecimal coletadoLixeiraLt;
     @Column(name = "LATITUDE")
     private BigDecimal latitude;
     @Column(name = "LONGITUDE")
     private BigDecimal longitude;
-
+    @Column(name = "CHEIO_VOLUME")
+    private String cheioVolume;
+    
     public Lixeira() {
     }
 
@@ -79,28 +75,12 @@ public class Lixeira implements Serializable {
         this.capacidadeLixeiraKg = capacidadeLixeiraKg;
     }
 
-    public BigDecimal getCapacidadeLixeiraLt() {
-        return capacidadeLixeiraLt;
-    }
-
-    public void setCapacidadeLixeiraLt(BigDecimal capacidadeLixeiraLt) {
-        this.capacidadeLixeiraLt = capacidadeLixeiraLt;
-    }
-
     public BigDecimal getColetadoLixeiraKg() {
         return coletadoLixeiraKg;
     }
 
     public void setColetadoLixeiraKg(BigDecimal coletadoLixeiraKg) {
         this.coletadoLixeiraKg = coletadoLixeiraKg;
-    }
-
-    public BigDecimal getColetadoLixeiraLt() {
-        return coletadoLixeiraLt;
-    }
-
-    public void setColetadoLixeiraLt(BigDecimal coletadoLixeiraLt) {
-        this.coletadoLixeiraLt = coletadoLixeiraLt;
     }
 
     public BigDecimal getLatitude() {
@@ -117,6 +97,14 @@ public class Lixeira implements Serializable {
 
     public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
+    }
+
+    public String getCheioVolume() {
+        return cheioVolume;
+    }
+
+    public void setCheioVolume(String cheioVolume) {
+        this.cheioVolume = cheioVolume;
     }
 
     @Override

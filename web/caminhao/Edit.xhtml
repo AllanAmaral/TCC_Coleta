@@ -19,8 +19,6 @@
                     <h:inputText id="idCaminhao" value="#{caminhaoController.selected.idCaminhao}" title="#{conf.EditCaminhaoTitle_idCaminhao}" required="true" requiredMessage="#{conf.EditCaminhaoRequiredMessage_idCaminhao}"/>
                     <h:outputLabel value="#{conf.EditCaminhaoLabel_capacidadeCaminhaoKg}" for="capacidadeCaminhaoKg" />
                     <h:inputText id="capacidadeCaminhaoKg" value="#{caminhaoController.selected.capacidadeCaminhaoKg}" title="#{conf.EditCaminhaoTitle_capacidadeCaminhaoKg}" />
-                    <h:outputLabel value="#{conf.EditCaminhaoLabel_capacidadeCaminhaoLt}" for="capacidadeCaminhaoLt" />
-                    <h:inputText id="capacidadeCaminhaoLt" value="#{caminhaoController.selected.capacidadeCaminhaoLt}" title="#{conf.EditCaminhaoTitle_capacidadeCaminhaoLt}" />
                 </h:panelGrid>
                 <br />
                 <h:commandButton action="#{caminhaoController.update}" value="#{conf.EditCaminhaoSaveLink}"/>

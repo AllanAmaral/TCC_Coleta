@@ -3,15 +3,11 @@ package business.controller;
 import business.objects.Lixeira;
 import business.util.JsfUtil;
 import dao.LixeiraFacade;
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
-import java.util.Random;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -136,9 +132,7 @@ public class IndexController implements Serializable {
                         .write("Latitude", lixeira.getLatitude())
                         .write("Longitude", lixeira.getLongitude())
                         .write("Descricao", "Capacidade Kg: " + lixeira.getCapacidadeLixeiraKg()
-                                            + "\n" + "Capacidade Lt: " + lixeira.getCapacidadeLixeiraLt()
-                                            + "\n" + "Coletado Kg: " + lixeira.getColetadoLixeiraKg()
-                                            + "\n" + "Coletado Lt: " + lixeira.getColetadoLixeiraLt())
+                                            + "\n" + "Coletado Kg: " + lixeira.getColetadoLixeiraKg())
                         .writeEnd();
             }
 

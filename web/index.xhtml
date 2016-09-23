@@ -16,52 +16,65 @@
             <h:form>
                 <table style="width:100%;">
                     <tr>
-                        <th style="width:60%">      
+                        <th style="width:60%;vertical-align: top;">      
                             <div id="mapa" style="height: 500px; width: 700px"></div>
                         </th>
                         <th>
                             <table>
                                 <tr>
                                     <th style="vertical-align: top;">
-                                        <h:panelGrid columns="2" style="text-align: left;">
-                                            <h:outputLabel value="Identificador Lixeira"/>
-                                            <h:inputText value="#{indexController.idLixeira}"/>
-                                            <h:outputLabel value="Valor Coletado"/>
-                                            <h:inputText value="#{indexController.valorColetado}"/>
-                                            <h:commandLink  value="Atualizar Lixeiras"  action="#{indexController.carregarPontosLixeiras()}" style="color:#af0000;border-width: 1; border: solid; text-decoration: none;"/>
-                                            <h:commandLink  value="Random"  action="#{indexController.randomValoresLixeiras()}" style="color:#af0000;border-width: 1; border: solid; text-decoration: none;"/>
-                                        </h:panelGrid>
+                                        <fieldset>
+                                            <legend>Simulação de Lixeiras</legend>
+                                            <h:panelGrid columns="2" style="text-align: left;">
+                                                <h:outputLabel value="Identificador Lixeira"/>
+                                                <h:inputText value="#{indexController.idLixeira}"/>
+                                                <h:outputLabel value="Valor Coletado"/>
+                                                <h:inputText value="#{indexController.valorColetado}"/>
+                                                <h:commandLink  value="Atualizar Lixeiras"  action="#{indexController.carregarPontosLixeiras()}" style="color:#af0000;border-width: 1; border: solid; text-decoration: none;"/>
+                                                <h:commandLink  value="Random"  action="#{indexController.randomValoresLixeiras()}" style="color:#af0000;border-width: 1; border: solid; text-decoration: none;"/>
+                                            </h:panelGrid>
+                                        </fieldset>
                                     </th>
                                 </tr>
-                                <tr style="height: 200px;"></tr>
                                 <tr>
-                                    <th style="text-align: left;vertical-align: bottom;">
-                                        Legenda:
+                                    <th>
+                                        <form method="post" action="index.html">
+                                            <fieldset>
+                                                <legend>Criar rotas</legend>
+                                                <div>
+                                                   <input type="submit" id="btnEnviar" name="btnEnviar" value="Enviar" />
+                                                </div>
+                                                <div id="trajeto-texto" style="height: 150px; width: 200px"></div>
+                                            </fieldset>
+                                        </form>
                                     </th>
                                 </tr>
                                 <tr>
                                     <th style="vertical-align: bottom;">
-                                        <table style="width:100%;text-align: left;" >
-                                            
-                                            <tr>
-                                                <th>
-                                                    <h:graphicImage library="img" name="lixeira-azul-icon.png" />
-                                                    Nível Baixo: 0% - 30%
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <th>
-                                                    <h:graphicImage library="img" name="lixeira-amarela-icon.png" />
-                                                    Nível Médio: 30% - 70%
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <th>
-                                                    <h:graphicImage library="img" name="lixeira-vermelha-icon.png" />
-                                                    Nível Alto: 70% - 100%
-                                                </th>
-                                            </tr>
-                                        </table> 
+                                        <fieldset>
+                                            <legend>Legenda</legend>
+                                            <table style="width:100%;text-align: left;" >
+
+                                                <tr>
+                                                    <th>
+                                                        <h:graphicImage library="img" name="lixeira-azul-icon.png" />
+                                                        Nível Baixo: 0% - 30%
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <th>
+                                                        <h:graphicImage library="img" name="lixeira-amarela-icon.png" />
+                                                        Nível Médio: 30% - 70%
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <th>
+                                                        <h:graphicImage library="img" name="lixeira-vermelha-icon.png" />
+                                                        Nível Alto: 70% - 100%
+                                                    </th>
+                                                </tr>
+                                            </table>
+                                        </fieldset>
                                     </th>
                                 </tr>
                             </table>
