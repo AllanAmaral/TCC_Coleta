@@ -22,7 +22,7 @@ function initialize() {
 
 initialize();
 
-$("form").submit(function(event) {
+function rota() {
    event.preventDefault();
  
    var enderecoPartida = new google.maps.LatLng(-30.037706, -51.204696);
@@ -31,7 +31,7 @@ $("form").submit(function(event) {
    var request = { // Novo objeto google.maps.DirectionsRequest, contendo:
       origin: enderecoPartida, // origem
       destination: enderecoChegada, // destino
-      waypoints: [{location: new google.maps.LatLng(-30.0305270000, -51.2189470000)}],
+      waypoints: [{latlng: new google.maps.LatLng(-30.0305270000, -51.2189470000)}],
       travelMode: google.maps.TravelMode.DRIVING // meio de transporte, nesse caso, de carro
    };
  
@@ -40,7 +40,7 @@ $("form").submit(function(event) {
          directionsDisplay.setDirections(result); // Renderizamos no mapa o resultado
       }
    });
-});
+}
 
 function abrirInfoBox(id, marker) {
 	if (typeof(idInfoBoxAberto) == 'number' && typeof(infoBox[idInfoBoxAberto]) == 'object') {
@@ -49,6 +49,34 @@ function abrirInfoBox(id, marker) {
 
 	infoBox[id].open(map, marker);
 	idInfoBoxAberto = id;
+}
+
+function carregarInfoLixeiras() {
+    $.getJSON('js/pontos.json', function(pontos) {
+        
+        $.each(pontos, function(index, ponto) {
+            var lixeira = new Object();
+            lixeira.id = ponto.Id;
+            lixeira.distancia = "Aaberg";
+            lixeira.transito = "555-0100";
+            
+            lixeira.toJSON = function(key)
+            {
+               var replacement = new Object();
+               for (var val in this)
+               {
+                   if (typeof (this[val]) === 'string')
+                       replacement[val] = this[val].toUpperCase();
+                   else
+                       replacement[val] = this[val]
+               }
+               return replacement;
+           };
+           
+           var jsonText = JSON.stringify(lixeira);
+            document.write(jsonText);
+        });
+    });
 }
 
 function carregarPontos() {   
