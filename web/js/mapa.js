@@ -18,29 +18,10 @@ function initialize() {
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById("trajeto-texto"));
     carregarPontos();
+    carregarInfoLixeiras();
 }
 
 initialize();
-
-function rota() {
-   event.preventDefault();
- 
-   var enderecoPartida = new google.maps.LatLng(-30.037706, -51.204696);
-   var enderecoChegada = new google.maps.LatLng(-30.037706, -51.204696);
- 
-   var request = { // Novo objeto google.maps.DirectionsRequest, contendo:
-      origin: enderecoPartida, // origem
-      destination: enderecoChegada, // destino
-      waypoints: [{latlng: new google.maps.LatLng(-30.0305270000, -51.2189470000)}],
-      travelMode: google.maps.TravelMode.DRIVING // meio de transporte, nesse caso, de carro
-   };
- 
-   directionsService.route(request, function(result, status) {
-      if (status == google.maps.DirectionsStatus.OK) { // Se deu tudo certo
-         directionsDisplay.setDirections(result); // Renderizamos no mapa o resultado
-      }
-   });
-}
 
 function abrirInfoBox(id, marker) {
 	if (typeof(idInfoBoxAberto) == 'number' && typeof(infoBox[idInfoBoxAberto]) == 'object') {
@@ -51,30 +32,129 @@ function abrirInfoBox(id, marker) {
 	idInfoBoxAberto = id;
 }
 
+function desenharRota(latitude_A, longitude_A, latitude_B, longitude_B, wayPoint){
+
+    directionsPanel = document.getElementById("directionsPanel");
+    //Limpa o painel de qualquer html
+    directionsPanel.innerHTML = "";
+
+    var directionsDisplay = new google.maps.DirectionsRenderer({
+        'map': map,
+        'preserveViewport': true,
+        'draggable': true,
+        'hideRouteList': true
+    });
+
+    directionsDisplay.setPanel(directionsPanel);
+
+    var request = {
+        origin: new google.maps.LatLng(latitude_A, longitude_A),
+        destination: new google.maps.LatLng(latitude_B, longitude_B),
+        travelMode: google.maps.DirectionsTravelMode.DRIVING,
+        provideRouteAlternatives: true,
+        drivingOptions: {
+        departureTime: new Date(Date.now()),
+        trafficModel: "pessimistic"
+                        }
+    };
+
+    directionsService.route(request, function (response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+        }
+    }); 
+
+
+    marker[0].setPosition(null);
+    marker[1].setPosition(null);
+        google.maps.event.addListener(directionsDisplay, 'directions_changed', function () {
+        var total = 0;
+        var tempo = 0;
+        var velocidade_Media = 0;
+        var myroute = (directionsDisplay.getDirections()).routes[0];
+        for (var i = 0; i < myroute.legs.length; i++) {
+                total += myroute.legs[i].distance.value;
+        }
+        total = total / 1000;
+        tempo = (((myroute.legs[0].duration.value)/60)/60);
+
+        alert(myroute.legs[0].start_location + "\n" + myroute.legs[0].end_location);
+
+        for(var x = 0; x < myroute.legs.length; x++){
+
+        }
+        percorre[0]  = myroute.legs[0].steps[0].end_location;
+        percorre[1]  = myroute.legs[0].steps[1].end_location;
+        percorre[2]  = myroute.legs[0].steps[2].end_location;
+
+        alert(percorre[0] +"\n"+ percorre[1]) +"\n"+ percorre[2];
+
+      alert("A velocidade media nesse trecho é de: "+(total/tempo));
+        velocidade = (total/tempo).toString();
+
+    }); 
+        google.maps.event.addListener(map, 'click', function(event) {
+            if(marker_contador == 0){
+                marker[0].setPosition(event.latLng);
+            }
+            if(marker_contador == 1){
+                marker[1].setPosition(event.latLng);
+                latitude_A = marker[0].getPosition().lat();
+                longitude_A = marker[0].getPosition().lng();
+                latitude_B = marker[1].getPosition().lat();
+                longitude_B = marker[1].getPosition().lng();
+
+                desenharRota(latitude_A, longitude_A, latitude_B, longitude_B);
+            }
+            if(marker_contador < 2){
+                marker_contador++;
+            }
+
+    });
+}
+
 function carregarInfoLixeiras() {
-    $.getJSON('js/pontos.json', function(pontos) {
+    $.getJSON('js/arestas.json', function(arestas) {
         
-        $.each(pontos, function(index, ponto) {
-            var lixeira = new Object();
-            lixeira.id = ponto.Id;
-            lixeira.distancia = "Aaberg";
-            lixeira.transito = "555-0100";
+        $.each(arestas, function(index, aresta) {
+            var service = new google.maps.DistanceMatrixService();
+            var transito = new Object();
+            transito.IdOrigem = aresta.IdOrigem;
+            transito.TipoOrigem = aresta.TipoOrigem;
+            transito.IdDestino = aresta.IdDestino;
+            transito.TipoDestino = aresta.TipoDestino;
             
-            lixeira.toJSON = function(key)
-            {
+            service.getDistanceMatrix(
+              {
+                  origins: new google.maps.LatLng(aresta.OrigemLatitude, aresta.OrigemLongitude),
+                  destinations: new google.maps.LatLng(aresta.DestinoLatitude, aresta.DestinoLongitude),
+                  travelMode: google.maps.TravelMode.DRIVING,
+                  unitSystem: google.maps.UnitSystem.METRIC
+              }, function(response, status) {
+                if (status !== google.maps.DistanceMatrixStatus.OK) {
+                    transito.Transito = status;
+                    alert('Error was: ' + status);
+                } else {
+                    transito.Transito = response.rows[0].elements[0].duration.text;
+                    alert('Error was: ' + response.rows[0].elements[0].duration.text);
+                }
+               }
+           );
+           transito.toJSON = function(key)
+           {
                var replacement = new Object();
                for (var val in this)
                {
                    if (typeof (this[val]) === 'string')
                        replacement[val] = this[val].toUpperCase();
                    else
-                       replacement[val] = this[val]
+                       replacement[val] = this[val];
                }
                return replacement;
            };
            
-           var jsonText = JSON.stringify(lixeira);
-            document.write(jsonText);
+           var jsonText = JSON.stringify(transito);
+           System.IO.File.WriteAllText('js/infolixeiras.json', jsonText);
         });
     });
 }

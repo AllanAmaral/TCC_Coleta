@@ -153,6 +153,7 @@ public class IndexController implements Serializable {
 
             geradorJson.writeEnd().close();
 
+            criarGrafo();
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }
@@ -239,7 +240,7 @@ public class IndexController implements Serializable {
     
     private Grafo addArestaPadrao(Grafo grafo, Integer e1, Integer l, Integer e2) {
         grafo.addAresta(getVerticeEsquina(grafo, e1), getVerticeLixeira(grafo, l));
-        grafo.addAresta(getVerticeLixeira(grafo, 61), getVerticeEsquina(grafo, e2));
+        grafo.addAresta(getVerticeLixeira(grafo, l), getVerticeEsquina(grafo, e2));
         grafo.addAresta(getVerticeEsquina(grafo, e1), getVerticeEsquina(grafo, e2));
         
         return grafo;
@@ -270,6 +271,16 @@ public class IndexController implements Serializable {
         geradorJson.writeStartArray();
         for (Aresta aresta : grafo.getArestas()) {
             geradorJson.writeStartObject()
+                .write("IdOrigem", aresta.getOrigem().getIdEsquina() != null 
+                        ? aresta.getOrigem().getIdEsquina()
+                        : aresta.getOrigem().getIdLixeira())
+                .write("TipoOrigem", aresta.getOrigem().getIdEsquina() != null 
+                        ? "E" : "L")
+                .write("IdDestino", aresta.getDestino().getIdEsquina() != null 
+                        ? aresta.getDestino().getIdEsquina()
+                        : aresta.getDestino().getIdLixeira()) 
+                .write("TipoDestino", aresta.getDestino().getIdEsquina() != null 
+                        ? "E" : "L")
                 .write("OrigemLatitude", aresta.getOrigem().getIdEsquina() != null 
                         ? mapEsquinas.get(aresta.getOrigem().getIdEsquina()).getLatitude()
                         : mapLixeiras.get(aresta.getOrigem().getIdLixeira()).getLatitude())
