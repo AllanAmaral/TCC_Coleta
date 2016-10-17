@@ -18,7 +18,8 @@ function initialize() {
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById("trajeto-texto"));
     carregarPontos();
-    carregarInfoLixeiras();
+    desenharRota();
+    //carregarInfoLixeiras();
 }
 
 initialize();
@@ -32,9 +33,8 @@ function abrirInfoBox(id, marker) {
 	idInfoBoxAberto = id;
 }
 
-function desenharRota(latitude_A, longitude_A, latitude_B, longitude_B, wayPoint){
-
-    directionsPanel = document.getElementById("directionsPanel");
+function desenharRota(){
+    directionsPanel = document.getElementById("trajeto-texto");
     //Limpa o painel de qualquer html
     directionsPanel.innerHTML = "";
 
@@ -46,12 +46,36 @@ function desenharRota(latitude_A, longitude_A, latitude_B, longitude_B, wayPoint
     });
 
     directionsDisplay.setPanel(directionsPanel);
-
+    
+    var waypoints = [];
+    $.getJSON('js/lixeirasRota.json', function(pontos) {
+        
+        $.each(pontos, function(index, ponto) {
+            waypoints.push({
+            location: new google.maps.LatLng(ponto.Latitude, ponto.Longitude),
+            stopover: true
+            })
+        });
+    });
+    
+    var latitude_A; 
+    var longitude_A; 
+    var latitude_B; 
+    var longitude_B;
+    
+    //if (waypoints.length > 0) {
+        latitude_A = -30.0363497500; 
+        longitude_A = -51.2097001100; 
+        latitude_B = -30.0363497500; 
+        longitude_B = -51.2097001100;
+    //}
+    
     var request = {
         origin: new google.maps.LatLng(latitude_A, longitude_A),
         destination: new google.maps.LatLng(latitude_B, longitude_B),
         travelMode: google.maps.DirectionsTravelMode.DRIVING,
         provideRouteAlternatives: true,
+        waypoints: waypoints,
         drivingOptions: {
         departureTime: new Date(Date.now()),
         trafficModel: "pessimistic"
