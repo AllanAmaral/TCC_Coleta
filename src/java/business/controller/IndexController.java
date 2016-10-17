@@ -4,7 +4,9 @@ import business.objects.Lixeira;
 import business.util.JsfUtil;
 import dao.EsquinaFacade;
 import dao.LixeiraFacade;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -28,7 +30,12 @@ public class IndexController implements Serializable {
     @EJB
     private dao.EsquinaFacade esquinaFacade;
 
-    public IndexController() {
+    public IndexController() throws FileNotFoundException, IOException {
+        String fileRota = FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
+                    + "\\js\\lixeirasRota.json";
+        FileOutputStream fosRota = new FileOutputStream(fileRota);
+        fosRota.write("".getBytes());
+        fosRota.close();
     }
 
     private LixeiraFacade getFacadeLixeira() {

@@ -2,6 +2,7 @@ var map;
 var idInfoBoxAberto;
 var infoBox = [];
 var directionsDisplay;
+var waypoints = [];
 var directionsService = new google.maps.DirectionsService();
 
 function initialize() {	
@@ -17,9 +18,21 @@ function initialize() {
     map = new google.maps.Map(document.getElementById("mapa"), options);
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById("trajeto-texto"));
+    var trafficLayer = new google.maps.TrafficLayer();
+    trafficLayer.setMap(map);
     carregarPontos();
-    desenharRota();
-    //carregarInfoLixeiras();
+
+    $.getJSON('js/lixeirasRota.json', function(pontos) {
+        
+        $.each(pontos, function(index, ponto) {
+            waypoints.push({
+            location: new google.maps.LatLng(ponto.Latitude, ponto.Longitude),
+            stopover: true
+            })
+        });
+    });
+    if (waypoints.length > 0)
+        desenharRota();
 }
 
 initialize();
@@ -47,28 +60,15 @@ function desenharRota(){
 
     directionsDisplay.setPanel(directionsPanel);
     
-    var waypoints = [];
-    $.getJSON('js/lixeirasRota.json', function(pontos) {
-        
-        $.each(pontos, function(index, ponto) {
-            waypoints.push({
-            location: new google.maps.LatLng(ponto.Latitude, ponto.Longitude),
-            stopover: true
-            })
-        });
-    });
-    
     var latitude_A; 
     var longitude_A; 
     var latitude_B; 
     var longitude_B;
-    
-    //if (waypoints.length > 0) {
-        latitude_A = -30.0363497500; 
-        longitude_A = -51.2097001100; 
-        latitude_B = -30.0363497500; 
-        longitude_B = -51.2097001100;
-    //}
+
+    latitude_A = -30.0363497500; 
+    longitude_A = -51.2097001100; 
+    latitude_B = -30.036647;
+    longitude_B = -51.209485;
     
     var request = {
         origin: new google.maps.LatLng(latitude_A, longitude_A),
@@ -77,9 +77,9 @@ function desenharRota(){
         provideRouteAlternatives: true,
         waypoints: waypoints,
         drivingOptions: {
-        departureTime: new Date(Date.now()),
-        trafficModel: "pessimistic"
-                        }
+            departureTime: new Date(Date.now()),
+            trafficModel: "pessimistic"
+        }
     };
 
     directionsService.route(request, function (response, status) {
@@ -87,7 +87,6 @@ function desenharRota(){
             directionsDisplay.setDirections(response);
         }
     }); 
-
 
     marker[0].setPosition(null);
     marker[1].setPosition(null);
@@ -134,52 +133,6 @@ function desenharRota(){
                 marker_contador++;
             }
 
-    });
-}
-
-function carregarInfoLixeiras() {
-    $.getJSON('js/arestas.json', function(arestas) {
-        
-        $.each(arestas, function(index, aresta) {
-            var service = new google.maps.DistanceMatrixService();
-            var transito = new Object();
-            transito.IdOrigem = aresta.IdOrigem;
-            transito.TipoOrigem = aresta.TipoOrigem;
-            transito.IdDestino = aresta.IdDestino;
-            transito.TipoDestino = aresta.TipoDestino;
-            
-            service.getDistanceMatrix(
-              {
-                  origins: new google.maps.LatLng(aresta.OrigemLatitude, aresta.OrigemLongitude),
-                  destinations: new google.maps.LatLng(aresta.DestinoLatitude, aresta.DestinoLongitude),
-                  travelMode: google.maps.TravelMode.DRIVING,
-                  unitSystem: google.maps.UnitSystem.METRIC
-              }, function(response, status) {
-                if (status !== google.maps.DistanceMatrixStatus.OK) {
-                    transito.Transito = status;
-                    alert('Error was: ' + status);
-                } else {
-                    transito.Transito = response.rows[0].elements[0].duration.text;
-                    alert('Error was: ' + response.rows[0].elements[0].duration.text);
-                }
-               }
-           );
-           transito.toJSON = function(key)
-           {
-               var replacement = new Object();
-               for (var val in this)
-               {
-                   if (typeof (this[val]) === 'string')
-                       replacement[val] = this[val].toUpperCase();
-                   else
-                       replacement[val] = this[val];
-               }
-               return replacement;
-           };
-           
-           var jsonText = JSON.stringify(transito);
-           System.IO.File.WriteAllText('js/infolixeiras.json', jsonText);
-        });
     });
 }
 
