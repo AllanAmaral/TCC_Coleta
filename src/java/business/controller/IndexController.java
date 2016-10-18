@@ -4,9 +4,7 @@ import business.objects.Lixeira;
 import business.util.JsfUtil;
 import dao.EsquinaFacade;
 import dao.LixeiraFacade;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -30,12 +28,7 @@ public class IndexController implements Serializable {
     @EJB
     private dao.EsquinaFacade esquinaFacade;
 
-    public IndexController() throws FileNotFoundException, IOException {
-        String fileRota = FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
-                    + "\\js\\lixeirasRota.json";
-        FileOutputStream fosRota = new FileOutputStream(fileRota);
-        fosRota.write("".getBytes());
-        fosRota.close();
+    public IndexController() {
     }
 
     private LixeiraFacade getFacadeLixeira() {
@@ -156,7 +149,6 @@ public class IndexController implements Serializable {
                 
                 if (cor == 1) {
                     geradorJsonRota.writeStartObject()
-                        .write("Id", lixeira.getIdLixeira())
                         .write("Latitude", lixeira.getLatitude())
                         .write("Longitude", lixeira.getLongitude())
                         .writeEnd();
@@ -165,8 +157,6 @@ public class IndexController implements Serializable {
             
             geradorJson.writeEnd().close();
             geradorJsonRota.writeEnd().close();
-
-            //criarGrafo();
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }

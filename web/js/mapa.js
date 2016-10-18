@@ -1,8 +1,8 @@
 var map;
 var idInfoBoxAberto;
 var infoBox = [];
-var directionsDisplay;
 var waypoints = [];
+var directionsDisplay;
 var directionsService = new google.maps.DirectionsService();
 
 function initialize() {	
@@ -14,25 +14,23 @@ function initialize() {
 	center: latlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-
+    
     map = new google.maps.Map(document.getElementById("mapa"), options);
+    carregarPontos();
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById("trajeto-texto"));
     var trafficLayer = new google.maps.TrafficLayer();
     trafficLayer.setMap(map);
-    carregarPontos();
-
+    
     $.getJSON('js/lixeirasRota.json', function(pontos) {
-        
         $.each(pontos, function(index, ponto) {
             waypoints.push({
             location: new google.maps.LatLng(ponto.Latitude, ponto.Longitude),
             stopover: true
-            })
+            });
         });
-    });
-    if (waypoints.length > 0)
         desenharRota();
+    });
 }
 
 initialize();
@@ -60,10 +58,10 @@ function desenharRota(){
 
     directionsDisplay.setPanel(directionsPanel);
     
-    var latitude_A; 
-    var longitude_A; 
-    var latitude_B; 
-    var longitude_B;
+    var latitude_A = 0; 
+    var longitude_A = 0; 
+    var latitude_B = 0; 
+    var longitude_B = 0;
 
     latitude_A = -30.0363497500; 
     longitude_A = -51.2097001100; 
