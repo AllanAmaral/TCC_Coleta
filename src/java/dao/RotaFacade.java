@@ -1,6 +1,6 @@
 package dao;
 
-import business.objects.Esquina;
+import business.objects.Rota;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
  * @author Allan.Amaral
  */
 @Stateless
-public class EsquinaFacade extends AbstractFacade<Esquina> {
+public class RotaFacade extends AbstractFacade<Rota> {
 
     @PersistenceContext(unitName = "TCC_ColetaPU")
     private EntityManager em;
@@ -20,8 +20,8 @@ public class EsquinaFacade extends AbstractFacade<Esquina> {
         return em;
     }
 
-    public EsquinaFacade() {
-        super(Esquina.class);
+    public RotaFacade() {
+        super(Rota.class);
     }
 
 }

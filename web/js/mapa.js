@@ -46,8 +46,7 @@ function abrirInfoBox(id, marker) {
 
 function desenharRota(){
     directionsPanel = document.getElementById("trajeto-texto");
-    //Limpa o painel de qualquer html
-    directionsPanel.innerHTML = "";
+    directionsPanel.innerHTML = "";//Limpa o painel de qualquer html
 
     var directionsDisplay = new google.maps.DirectionsRenderer({
         'map': map,
@@ -55,18 +54,12 @@ function desenharRota(){
         'draggable': true,
         'hideRouteList': true
     });
-
     directionsDisplay.setPanel(directionsPanel);
-    
-    var latitude_A = 0; 
-    var longitude_A = 0; 
-    var latitude_B = 0; 
-    var longitude_B = 0;
 
-    latitude_A = -30.0363497500; 
-    longitude_A = -51.2097001100; 
-    latitude_B = -30.036647;
-    longitude_B = -51.209485;
+    var latitude_A = -30.0363497500; 
+    var longitude_A = -51.2097001100; 
+    var latitude_B = -30.036647;
+    var longitude_B = -51.209485;
     
     var request = {
         origin: new google.maps.LatLng(latitude_A, longitude_A),
@@ -88,49 +81,48 @@ function desenharRota(){
 
     marker[0].setPosition(null);
     marker[1].setPosition(null);
-        google.maps.event.addListener(directionsDisplay, 'directions_changed', function () {
-        var total = 0;
-        var tempo = 0;
-        var velocidade_Media = 0;
-        var myroute = (directionsDisplay.getDirections()).routes[0];
-        for (var i = 0; i < myroute.legs.length; i++) {
-                total += myroute.legs[i].distance.value;
-        }
-        total = total / 1000;
-        tempo = (((myroute.legs[0].duration.value)/60)/60);
+    google.maps.event.addListener(directionsDisplay, 'directions_changed', function () {
+    var total = 0;
+    var tempo = 0;
+    var velocidade_Media = 0;
+    var myroute = (directionsDisplay.getDirections()).routes[0];
+    for (var i = 0; i < myroute.legs.length; i++) {
+            total += myroute.legs[i].distance.value;
+    }
+    total = total / 1000;
+    tempo = (((myroute.legs[0].duration.value)/60)/60);
 
-        alert(myroute.legs[0].start_location + "\n" + myroute.legs[0].end_location);
+    alert(myroute.legs[0].start_location + "\n" + myroute.legs[0].end_location);
 
-        for(var x = 0; x < myroute.legs.length; x++){
+    for(var x = 0; x < myroute.legs.length; x++){
 
-        }
-        percorre[0]  = myroute.legs[0].steps[0].end_location;
-        percorre[1]  = myroute.legs[0].steps[1].end_location;
-        percorre[2]  = myroute.legs[0].steps[2].end_location;
+    }
+    percorre[0]  = myroute.legs[0].steps[0].end_location;
+    percorre[1]  = myroute.legs[0].steps[1].end_location;
+    percorre[2]  = myroute.legs[0].steps[2].end_location;
 
-        alert(percorre[0] +"\n"+ percorre[1]) +"\n"+ percorre[2];
+    alert(percorre[0] +"\n"+ percorre[1]) +"\n"+ percorre[2];
 
       alert("A velocidade media nesse trecho é de: "+(total/tempo));
         velocidade = (total/tempo).toString();
 
     }); 
-        google.maps.event.addListener(map, 'click', function(event) {
-            if(marker_contador == 0){
-                marker[0].setPosition(event.latLng);
-            }
-            if(marker_contador == 1){
-                marker[1].setPosition(event.latLng);
-                latitude_A = marker[0].getPosition().lat();
-                longitude_A = marker[0].getPosition().lng();
-                latitude_B = marker[1].getPosition().lat();
-                longitude_B = marker[1].getPosition().lng();
+    google.maps.event.addListener(map, 'click', function(event) {
+        if(marker_contador == 0){
+            marker[0].setPosition(event.latLng);
+        }
+        if(marker_contador == 1){
+            marker[1].setPosition(event.latLng);
+            latitude_A = marker[0].getPosition().lat();
+            longitude_A = marker[0].getPosition().lng();
+            latitude_B = marker[1].getPosition().lat();
+            longitude_B = marker[1].getPosition().lng();
 
-                desenharRota(latitude_A, longitude_A, latitude_B, longitude_B);
-            }
-            if(marker_contador < 2){
-                marker_contador++;
-            }
-
+            desenharRota(latitude_A, longitude_A, latitude_B, longitude_B);
+        }
+        if(marker_contador < 2){
+            marker_contador++;
+        }
     });
 }
 

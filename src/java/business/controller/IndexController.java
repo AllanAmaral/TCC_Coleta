@@ -2,7 +2,7 @@ package business.controller;
 
 import business.objects.Lixeira;
 import business.util.JsfUtil;
-import dao.EsquinaFacade;
+import dao.RotaFacade;
 import dao.LixeiraFacade;
 import java.io.FileOutputStream;
 
@@ -26,7 +26,7 @@ public class IndexController implements Serializable {
     @EJB
     private dao.LixeiraFacade lixeiraFacade;
     @EJB
-    private dao.EsquinaFacade esquinaFacade;
+    private dao.RotaFacade esquinaFacade;
 
     public IndexController() {
     }
@@ -35,7 +35,7 @@ public class IndexController implements Serializable {
         return lixeiraFacade;
     }
     
-    private EsquinaFacade getFacadeEsquina() {
+    private RotaFacade getFacadeEsquina() {
         return esquinaFacade;
     }
 
