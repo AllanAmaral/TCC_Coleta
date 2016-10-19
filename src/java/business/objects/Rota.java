@@ -1,7 +1,6 @@
 package business.objects;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -25,8 +24,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Rota.findAll", query = "SELECT r FROM Rota r"),
     @NamedQuery(name = "Rota.findByIdRota", query = "SELECT r FROM Rota r WHERE r.idRota = :idRota"),
-    @NamedQuery(name = "Rota.findByLatitude", query = "SELECT l FROM Esquina l WHERE l.latitude = :latitude"),
-    @NamedQuery(name = "Rota.findByLongitude", query = "SELECT l FROM Esquina l WHERE l.longitude = :longitude")})
+    @NamedQuery(name = "Rota.findByIdCaminhaoMotorista", query = "SELECT r FROM Rota r WHERE r.idCaminhaoMotorista = :idCaminhaoMotorista"),
+    @NamedQuery(name = "Rota.findByDataHora", query = "SELECT r FROM Rota r WHERE r.dataHora = :dataHora")})
 public class Rota implements Serializable {
 
     private static final long serialVersionUID = 1L;
