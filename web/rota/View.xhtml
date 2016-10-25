@@ -7,7 +7,7 @@
 
     <ui:composition template="/template.xhtml">
         <ui:define name="title">
-            <h:outputText value="#{conf.ViewLixeiraTitle}"></h:outputText>
+            <h:outputText value="#{conf.ViewRotaTitle}"></h:outputText>
         </ui:define>
         <ui:define name="body">
             <h:panelGroup id="messagePanel" layout="block">
@@ -15,27 +15,25 @@
             </h:panelGroup>
             <h:form>
                 <h:panelGrid columns="2">
-                    <h:outputText value="#{conf.ViewLixeiraLabel_idLixeira}"/>
-                    <h:outputText value="#{lixeiraController.selected.idLixeira}" title="#{conf.ViewLixeiraTitle_idLixeira}"/>
-                    <h:outputText value="#{conf.ViewLixeiraLabel_capacidadeLixeiraKg}"/>
-                    <h:outputText value="#{lixeiraController.selected.capacidadeLixeiraKg}" title="#{conf.ViewLixeiraTitle_capacidadeLixeiraKg}"/>
-                    <h:outputText value="#{conf.ViewLixeiraLabel_coletadoLixeiraKg}"/>
-                    <h:outputText value="#{lixeiraController.selected.coletadoLixeiraKg}" title="#{conf.ViewLixeiraTitle_coletadoLixeiraKg}"/>
-                    <h:outputText value="#{conf.ViewLixeiraLabel_latitude}"/>
-                    <h:outputText value="#{lixeiraController.selected.latitude}" title="#{conf.ViewLixeiraTitle_latitude}"/>
-                    <h:outputText value="#{conf.ViewLixeiraLabel_longitude}"/>
-                    <h:outputText value="#{lixeiraController.selected.longitude}" title="#{conf.ViewLixeiraTitle_longitude}"/>
+                    <h:outputText value="#{conf.ViewRotaLabel_idRota}"/>
+                    <h:outputText value="#{rotaController.selected.idRota}" title="#{conf.ViewRotaTitle_idLixeira}"/>
+                    <h:outputText value="#{conf.ViewRotaLabel_caminhao}"/>
+                    <h:outputText value="#{rotaController.selected.idCaminhaoMotorista}" title="#{conf.ViewRotaTitle_caminhao}"/>
+                    <h:outputText value="#{conf.ViewRotaLabel_motorista}"/>
+                    <h:outputText value="#{rotaController.selected.idCaminhaoMotorista}" title="#{conf.ViewRotaTitle_motorista}"/>
+                    <h:outputText value="#{conf.ViewRotaLabel_descricao}"/>
+                    <h:outputText value="#{rotaController.selected.descricao}" title="#{conf.ViewRotaTitle_descricao}"/>
+                    <h:outputText value="#{conf.ViewRotaLabel_data}"/>
+                    <h:outputText value="#{rotaController.selected.dataHora}" title="#{conf.ViewRotaTitle_data}"/>
                 </h:panelGrid>
                 <br />
-                <h:commandLink action="#{lixeiraController.destroyAndView}" value="#{conf.ViewLixeiraDestroyLink}"/>
+                <h:commandLink action="#{rotaController.destroyAndView}" value="#{conf.ViewRotaDestroyLink}"/>
                 &nbsp;
-                <h:link outcome="Edit" value="#{conf.ViewLixeiraEditLink}"/>
+                <h:link outcome="Edit" value="#{conf.ViewRotaEditLink}"/>
                 &nbsp;
-                <h:commandLink action="#{lixeiraController.prepareCreate}" value="#{conf.ViewLixeiraCreateLink}" />
+                <h:commandLink action="#{rotaController.prepareList}" value="#{conf.ViewRotaShowAllLink}"/>
                 &nbsp;
-                <h:commandLink action="#{lixeiraController.prepareList}" value="#{conf.ViewLixeiraShowAllLink}"/>
-                &nbsp;
-                <h:link outcome="/index" value="#{conf.ViewLixeiraIndexLink}"/>
+                <h:link outcome="/index" value="#{conf.ViewRotaIndexLink}"/>
 
             </h:form>
         </ui:define>

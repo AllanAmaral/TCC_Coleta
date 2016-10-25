@@ -23,15 +23,15 @@
                             <table>
                                 <tr>
                                     <th style="vertical-align: top;">
-                                        <fieldset >
-                                            <legend>Simulação de Lixeiras</legend>
+                                        <fieldset>
+                                            <legend>Lixeiras</legend>
                                             <h:panelGrid columns="2" style="text-align: left;">
                                                 <h:outputLabel value="Identificador Lixeira"/>
                                                 <h:inputText value="#{indexController.idLixeira}"/>
                                                 <h:outputLabel value="Valor Coletado"/>
                                                 <h:inputText value="#{indexController.valorColetado}"/>
-                                                <h:commandLink  value="Atualizar Lixeiras"  action="#{indexController.carregarPontosLixeiras()}" style="color:#af0000;border-width: 1; border: solid; text-decoration: none;"/>
-                                                <h:commandLink  value="Random"  action="#{indexController.randomValoresLixeiras()}" style="color:#af0000;border-width: 1; border: solid; text-decoration: none;"/>
+                                                <h:commandLink value="Atualizar Lixeiras" action="#{indexController.carregarPontosLixeiras()}" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
+                                                <h:commandLink value="Random" action="#{indexController.randomValoresLixeiras()}" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
                                             </h:panelGrid>
                                         </fieldset>
                                     </th>
@@ -39,12 +39,12 @@
                                 <tr>
                                     <th>
                                         <fieldset>
-                                            <legend>Criar rotas</legend>
-                                            <div>
-                                                <input type="submit" value="Calcular rota" onclick="desenharRota()" />
-                                            </div>
-                                            <div id="trajeto-texto" style="overflow:auto;height: 150px; width: 300px"></div>
+                                            <legend>Rotas</legend>
+                                            <h:panelGrid columns="1" style="text-align: left;">
+                                                <h:link outcome="/rota/Create" value="Criar Rota" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
+                                            </h:panelGrid>
                                         </fieldset>
+                                        <div id="trajeto-texto" style="overflow:auto; height: 150px;"></div>
                                     </th>
                                 </tr>
                                 <tr>
@@ -52,7 +52,6 @@
                                         <fieldset>
                                             <legend>Legenda</legend>
                                             <table style="width:100%;text-align: left;" >
-
                                                 <tr>
                                                     <th>
                                                         <h:graphicImage library="img" name="lixeira-azul-icon.png" />

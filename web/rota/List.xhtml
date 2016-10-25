@@ -7,71 +7,57 @@
 
     <ui:composition template="/template.xhtml">
         <ui:define name="title">
-            <h:outputText value="#{conf.ListLixeiraTitle}"></h:outputText>
+            <h:outputText value="#{conf.ListRotaTitle}"></h:outputText>
         </ui:define>
         <ui:define name="body">
             <h:form styleClass="jsfcrud_list_form">
                 <h:panelGroup id="messagePanel" layout="block">
                     <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
                 </h:panelGroup>
-                <h:outputText escape="false" value="#{conf.ListLixeiraEmpty}" rendered="#{lixeiraController.items.rowCount == 0}"/>
-                <h:panelGroup rendered="#{lixeiraController.items.rowCount > 0}">
-                    <h:outputText value="#{lixeiraController.pagination.pageFirstItem + 1}..#{lixeiraController.pagination.pageLastItem + 1}/#{lixeiraController.pagination.itemsCount}"/>&nbsp;
-                    <h:commandLink action="#{lixeiraController.previous}" value="#{conf.Previous} #{lixeiraController.pagination.pageSize}" rendered="#{lixeiraController.pagination.hasPreviousPage}"/>&nbsp;
-                    <h:commandLink action="#{lixeiraController.next}" value="#{conf.Next} #{lixeiraController.pagination.pageSize}" rendered="#{lixeiraController.pagination.hasNextPage}"/>&nbsp;
-                    <h:dataTable value="#{lixeiraController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                <h:outputText escape="false" value="#{conf.ListRotaEmpty}" rendered="#{rotaController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{rotaController.items.rowCount > 0}">
+                    <h:outputText value="#{rotaController.pagination.pageFirstItem + 1}..#{rotaController.pagination.pageLastItem + 1}/#{rotaController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{rotaController.previous}" value="#{conf.Previous} #{rotaController.pagination.pageSize}" rendered="#{rotaController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{rotaController.next}" value="#{conf.Next} #{rotaController.pagination.pageSize}" rendered="#{rotaController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{rotaController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
                         <h:column>
                             <f:facet name="header">
-                                <h:outputText value="#{conf.ListLixeiraTitle_idLixeira}"/>
+                                <h:outputText value="#{conf.ListRotaTitle_idRota}"/>
                             </f:facet>
-                            <h:outputText value="#{item.idLixeira}"/>
+                            <h:outputText value="#{item.idRota}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
-                                <h:outputText value="Status"/>
+                                <h:outputText value="#{conf.ListRotaTitle_caminhao}"/>
                             </f:facet>
-                            <h:graphicImage library="img" name="#{indexController.getImagemStatus(item)}" />
+                            <h:outputText value="#{item.idCaminhaoMotorista}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
-                                <h:outputText value="#{conf.ListLixeiraTitle_capacidadeLixeiraKg}"/>
+                                <h:outputText value="#{conf.ListRotaTitle_motorista}"/>
                             </f:facet>
-                            <h:outputText value="#{item.capacidadeLixeiraKg}"/>
+                            <h:outputText value="#{item.idCaminhaoMotorista}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
-                                <h:outputText value="#{conf.ListLixeiraTitle_coletadoLixeiraKg}"/>
+                                <h:outputText value="#{conf.ListRotaTitle_data}"/>
                             </f:facet>
-                            <h:outputText value="#{item.coletadoLixeiraKg}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{conf.ListLixeiraTitle_latitude}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.latitude}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{conf.ListLixeiraTitle_longitude}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.longitude}"/>
+                            <h:outputText value="#{item.dataHora}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="&nbsp;"/>
                             </f:facet>
-                            <h:commandLink action="#{lixeiraController.prepareView}" value="#{conf.ListLixeiraViewLink}"/>
+                            <h:commandLink action="#{rotaController.prepareView}" value="#{conf.ListRotaViewLink}"/>
                             <h:outputText value=" "/>
-                            <h:commandLink action="#{lixeiraController.prepareEdit}" value="#{conf.ListLixeiraEditLink}"/>
+                            <h:commandLink action="#{rotaController.prepareEdit}" value="#{conf.ListRotaEditLink}"/>
                             <h:outputText value=" "/>
-                            <h:commandLink action="#{lixeiraController.destroy}" value="#{conf.ListLixeiraDestroyLink}"/>
+                            <h:commandLink action="#{rotaController.destroy}" value="#{conf.ListRotaDestroyLink}"/>
                         </h:column>
                     </h:dataTable>
                 </h:panelGroup>
                 <br />
-                <h:commandLink action="#{lixeiraController.prepareCreate}" value="#{conf.ListLixeiraCreateLink}"/>
-                &nbsp;
-                <h:link outcome="/index" value="#{conf.ListLixeiraIndexLink}"/>
+                <h:link outcome="/index" value="#{conf.ListRotaIndexLink}"/>
             </h:form>
         </ui:define>
     </ui:composition>

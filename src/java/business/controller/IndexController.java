@@ -2,7 +2,6 @@ package business.controller;
 
 import business.objects.Lixeira;
 import business.util.JsfUtil;
-import dao.RotaFacade;
 import dao.LixeiraFacade;
 import java.io.FileOutputStream;
 
@@ -19,24 +18,18 @@ import javax.json.stream.JsonGenerator;
 
 @Named("indexController")
 @SessionScoped
-public class IndexController implements Serializable {
+public class IndexController extends GenericController implements Serializable {
     
     private Integer idLixeira;
     private BigDecimal valorColetado;
     @EJB
     private dao.LixeiraFacade lixeiraFacade;
-    @EJB
-    private dao.RotaFacade esquinaFacade;
 
     public IndexController() {
     }
 
     private LixeiraFacade getFacadeLixeira() {
         return lixeiraFacade;
-    }
-    
-    private RotaFacade getFacadeEsquina() {
-        return esquinaFacade;
     }
 
     public Integer getIdLixeira() {
@@ -53,45 +46,6 @@ public class IndexController implements Serializable {
 
     public void setValorColetado(BigDecimal valorColetado) {
         this.valorColetado = valorColetado;
-    }
-    
-    public String getImagemStatus(Lixeira lixeira) {
-        String img = null;
-        switch (getStatus(lixeira)) {
-            case 1:
-                img = "lixeira-vermelha-icon.png";
-                break;
-            case 2:
-                img = "lixeira-amarela-icon.png";
-                break;
-            case 3:
-                img = "lixeira-azul-icon.png";
-                break;
-        }
-        return img;
-    }
-    
-    private int getStatus(Lixeira lixeira) { 
-        int cor = 3;
-        
-        if (lixeira == null) return cor;
-        
-        if (lixeira.getColetadoLixeiraKg()
-                    .compareTo(lixeira.getCapacidadeLixeiraKg()
-                            .multiply(new BigDecimal(0.3))) < 1)
-            cor = 3;
-        if ((lixeira.getColetadoLixeiraKg()
-                .compareTo(lixeira.getCapacidadeLixeiraKg()
-                        .multiply(new BigDecimal(0.7))) < 1)
-            && (lixeira.getColetadoLixeiraKg()
-                .compareTo(lixeira.getCapacidadeLixeiraKg()
-                        .multiply(new BigDecimal(0.3))) > -1))
-            cor = 2;
-        if (lixeira.getColetadoLixeiraKg()
-                .compareTo(lixeira.getCapacidadeLixeiraKg()
-                        .multiply(new BigDecimal(0.7))) > -1)
-            cor = 1;
-        return cor;
     }
     
     public void randomValoresLixeiras() {
@@ -127,13 +81,7 @@ public class IndexController implements Serializable {
             FileOutputStream fos = new FileOutputStream(file);
             JsonGenerator geradorJson = Json.createGenerator(fos);
             
-            String fileRota = FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
-                    + "\\js\\lixeirasRota.json";
-            FileOutputStream fosRota = new FileOutputStream(fileRota);
-            JsonGenerator geradorJsonRota = Json.createGenerator(fosRota);
-            
             geradorJson.writeStartArray();
-            geradorJsonRota.writeStartArray();
             for (Lixeira lixeira : lixeiras) {
                 cor = getStatus(lixeira);
                 
@@ -146,17 +94,9 @@ public class IndexController implements Serializable {
                     .write("Descricao", "Capacidade Kg: " + lixeira.getCapacidadeLixeiraKg()
                                         + "\n" + "Coletado Kg: " + lixeira.getColetadoLixeiraKg())
                     .writeEnd();
-                
-                if (cor == 1) {
-                    geradorJsonRota.writeStartObject()
-                        .write("Latitude", lixeira.getLatitude())
-                        .write("Longitude", lixeira.getLongitude())
-                        .writeEnd();
-                }
             }
             
             geradorJson.writeEnd().close();
-            geradorJsonRota.writeEnd().close();
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }

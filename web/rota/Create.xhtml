@@ -7,7 +7,7 @@
 
     <ui:composition template="/template.xhtml">
         <ui:define name="title">
-            <h:outputText value="#{conf.CreateLixeiraTitle}"></h:outputText>
+            <h:outputText value="#{conf.CreateRotaTitle}"></h:outputText>
         </ui:define>
         <ui:define name="body">
             <h:panelGroup id="messagePanel" layout="block">
@@ -15,20 +15,18 @@
             </h:panelGroup>
             <h:form>
                 <h:panelGrid columns="2">
-                    <h:outputLabel value="#{conf.CreateLixeiraLabel_capacidadeLixeiraKg}" for="capacidadeLixeiraKg" />
-                    <h:inputText id="capacidadeLixeiraKg" value="#{lixeiraController.selected.capacidadeLixeiraKg}" title="#{conf.CreateLixeiraTitle_capacidadeLixeiraKg}" />
-                    <h:outputLabel value="#{conf.CreateLixeiraLabel_latitude}" for="latitude" />
-                    <h:inputText id="latitude" value="#{lixeiraController.selected.latitude}" title="#{conf.CreateLixeiraTitle_latitude}" />
-                    <h:outputLabel value="#{conf.CreateLixeiraLabel_longitude}" for="longitude" />
-                    <h:inputText id="longitude" value="#{lixeiraController.selected.longitude}" title="#{conf.CreateLixeiraTitle_longitude}" />
+                    <h:outputLabel value="#{conf.CreateRotaLabel_caminhao}" for="caminhao" />
+                    <h:inputText id="capacidadeLixeiraKg" value="#{rotaController.selected.idCaminhaoMotorista}" title="#{conf.CreateRotaTitle_caminhao}" />
+                    <h:outputLabel value="#{conf.CreateRotaLabel_motorista}" for="motorista" />
+                    <h:inputText id="latitude" value="#{rotaController.selected.idCaminhaoMotorista}" title="#{conf.CreateRotaTitle_motorista}" />
                 </h:panelGrid>
                 <br />
-                <h:commandButton action="#{lixeiraController.create}" value="#{conf.CreateLixeiraSaveLink}"/>
+                <h:commandButton action="#{rotaController.create}" value="#{conf.CreateRotaSaveLink}"/>
                 <br />
                 <br />
-                <h:commandLink action="#{lixeiraController.prepareList}" value="#{conf.CreateLixeiraShowAllLink}" immediate="true"/>
+                <h:commandLink action="#{rotaController.prepareList}" value="#{conf.CreateRotaShowAllLink}" immediate="true"/>
                 &nbsp;
-                <h:link outcome="/index" value="#{conf.CreateLixeiraIndexLink}"/>
+                <h:link outcome="/index" value="#{conf.CreateRotaIndexLink}"/>
             </h:form>
         </ui:define>
     </ui:composition>
