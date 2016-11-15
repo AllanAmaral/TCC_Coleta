@@ -41,10 +41,10 @@
                                         <fieldset>
                                             <legend>Rotas</legend>
                                             <h:panelGrid columns="1" style="text-align: left;">
-                                                <h:link outcome="/rota/Create" value="Criar Rota" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
+                                                <h:link onclick="#{rotaController.definirLixeirasRotasOtimizada()}" outcome="/rota/Create" value="Criar Rota" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
+                                                <h:link onclick="#{rotaController.definirLixeirasRotasNormal()}" outcome="/rota/Create" value="Criar Rota Ruim" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
                                             </h:panelGrid>
                                         </fieldset>
-                                        <div id="trajeto-texto" style="overflow:auto; height: 150px;"></div>
                                     </th>
                                 </tr>
                                 <tr>
@@ -78,7 +78,6 @@
                         </th>
                    </tr>
                 </table>
-                <br />
                 <br />
                 <h:link outcome="/caminhao/List" value="Caminhões" />
                 &nbsp;

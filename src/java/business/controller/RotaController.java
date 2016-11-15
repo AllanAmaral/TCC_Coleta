@@ -6,7 +6,10 @@ import business.util.JsfUtil;
 import business.util.PaginationHelper;
 import dao.LixeiraFacade;
 import dao.RotaFacade;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,10 +21,12 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.faces.event.ActionEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 import javax.json.Json;
+import javax.json.JsonObject;
 import javax.json.stream.JsonGenerator;
 
 @Named("rotaController")
@@ -29,6 +34,8 @@ import javax.json.stream.JsonGenerator;
 public class RotaController extends GenericController implements Serializable {
 
     private Rota current;
+    private String totalKm;
+    private String totalTempo;
     private DataModel items = null;
     private PaginationHelper pagination;
     private int selectedItemIndex;
@@ -93,6 +100,11 @@ public class RotaController extends GenericController implements Serializable {
 
     public String create() {
         try {
+            totalKm = FacesContext.getCurrentInstance().
+		getExternalContext().getRequestParameterMap().get("totalKm");
+            totalTempo = FacesContext.getCurrentInstance().
+		getExternalContext().getRequestParameterMap().get("totalTempo");
+            
             getFacadeRota().create(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/conf").getString("RotaCreated"));
             return prepareCreate();
@@ -244,31 +256,114 @@ public class RotaController extends GenericController implements Serializable {
 
     }
     
-    public void definirLixeirasRotas() {
+    public void definirLixeirasRotasOtimizada() {
         try {           
             List<Lixeira> lixeiras = getFacadeLixeira().findAll();
+            carregarLixeiras(lixeiras);
             int cor;
-
             String fileRota = FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
-                    + "\\js\\lixeirasRota.json";
+                    + "\\rota\\js\\lixeirasRota.json";
             FileOutputStream fosRota = new FileOutputStream(fileRota);
             JsonGenerator geradorJsonRota = Json.createGenerator(fosRota);
-            
+
             geradorJsonRota.writeStartArray();
+            int cont = 0;
             for (Lixeira lixeira : lixeiras) {
                 cor = getStatus(lixeira);
 
-                if (cor == 1) {
+                if (cor == 1 && cont < 8) {
                     geradorJsonRota.writeStartObject()
                         .write("Latitude", lixeira.getLatitude())
                         .write("Longitude", lixeira.getLongitude())
                         .writeEnd();
+                    cont++;
                 }
             }
             
             geradorJsonRota.writeEnd().close();
+            
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }
     }
+    
+    public void definirLixeirasRotasNormal() {
+        try {           
+            List<Lixeira> lixeiras = getFacadeLixeira().findAll();
+            carregarLixeiras(lixeiras);
+            String fileRota = FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
+                    + "\\rota\\js\\lixeirasRota.json";
+            FileOutputStream fosRota = new FileOutputStream(fileRota);
+            JsonGenerator geradorJsonRota = Json.createGenerator(fosRota);
+
+            geradorJsonRota.writeStartArray();
+            int cont = 0;
+            for (Lixeira lixeira : lixeiras) {
+
+                if (cont < 8) {
+                    geradorJsonRota.writeStartObject()
+                        .write("Latitude", lixeira.getLatitude())
+                        .write("Longitude", lixeira.getLongitude())
+                        .writeEnd();
+                    cont++;
+                }
+            }
+            
+            geradorJsonRota.writeEnd().close();
+            
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
+        }
+    }
+    
+    public void carregarLixeiras(List<Lixeira> lixeiras) {
+        try {           
+            int cor;
+            String file = FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
+                    + "\\rota\\js\\pontos.json";
+            FileOutputStream fos = new FileOutputStream(file);
+            JsonGenerator geradorJson = Json.createGenerator(fos);
+            
+            geradorJson.writeStartArray();
+            
+            for (Lixeira lixeira : lixeiras) {
+                cor = getStatus(lixeira);
+
+                geradorJson.writeStartObject()
+                    .write("Id", lixeira.getIdLixeira())
+                    .write("Cor", cor)
+                    .write("Latitude", lixeira.getLatitude())
+                    .write("Longitude", lixeira.getLongitude())
+                    .write("Descricao", "Capacidade Kg: " + lixeira.getCapacidadeLixeiraKg()
+                                        + "\n" + "Coletado Kg: " + lixeira.getColetadoLixeiraKg())
+                    .writeEnd();
+            }
+            
+            geradorJson.writeEnd().close();
+            
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
+        }
+    }
+
+    public String getTotalKm() {
+        return totalKm;
+    }
+
+    public void setTotalKm(String totalKm) {
+        this.totalKm = totalKm;
+    }
+
+    public void actionTotalKm(String value) {
+        this.totalKm = value;
+    }
+    
+    public String getTotalTempo() {
+        return totalTempo;
+    }
+
+    public void setTotalTempo(String totalTempo) {
+        this.totalTempo = totalTempo;
+    }
+    
 }

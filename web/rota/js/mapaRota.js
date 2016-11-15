@@ -4,6 +4,8 @@ var infoBox = [];
 var waypoints = [];
 var directionsDisplay;
 var directionsService = new google.maps.DirectionsService();
+var totalKm = 0;
+var totalTempo = 0;
 
 function initialize() {	
     directionsDisplay = new google.maps.DirectionsRenderer();
@@ -15,7 +17,7 @@ function initialize() {
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     
-    map = new google.maps.Map(document.getElementById("mapa"), options);
+    map = new google.maps.Map(document.getElementById("mapaRota"), options);
     carregarPontos();
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById("trajeto-texto"));
@@ -29,7 +31,8 @@ function initialize() {
             stopover: true
             });
         });
-        desenharRota();
+
+        desenharRota(-30.0363497500, -51.2097001100, -30.036647, -51.209485);
     });
 }
 
@@ -44,7 +47,7 @@ function abrirInfoBox(id, marker) {
 	idInfoBoxAberto = id;
 }
 
-function desenharRota(){
+function desenharRota(latitude_A, longitude_A, latitude_B, longitude_B){
     directionsPanel = document.getElementById("trajeto-texto");
     directionsPanel.innerHTML = "";//Limpa o painel de qualquer html
 
@@ -56,11 +59,6 @@ function desenharRota(){
     });
     directionsDisplay.setPanel(directionsPanel);
 
-    var latitude_A = -30.0363497500; 
-    var longitude_A = -51.2097001100; 
-    var latitude_B = -30.036647;
-    var longitude_B = -51.209485;
-    
     var request = {
         origin: new google.maps.LatLng(latitude_A, longitude_A),
         destination: new google.maps.LatLng(latitude_B, longitude_B),
@@ -76,6 +74,15 @@ function desenharRota(){
     directionsService.route(request, function (response, status) {
         if (status == google.maps.DirectionsStatus.OK) {
             directionsDisplay.setDirections(response);
+            
+            var myroute = (directionsDisplay.getDirections()).routes[0];
+            for (var i = 0; i < myroute.legs.length; i++) {
+                    totalKm += parseFloat(myroute.legs[i].distance.text.replace(',','.'));
+                    totalTempo += parseInt(myroute.legs[i].duration.text);
+            }
+
+            $('#totalKm').val(totalKm.toFixed(1).toString());
+            $('#totalTempo').val(totalTempo.toString());
         }
     }); 
 
@@ -104,8 +111,9 @@ function desenharRota(){
         alert(percorre[0] +"\n"+ percorre[1]) +"\n"+ percorre[2];
 
         alert("A velocidade media nesse trecho é de: "+(total/tempo));
-        velocidade = (total/tempo).toString();
-    }); 
+        velocidade_Media = (total/tempo).toString();
+    });
+    
     google.maps.event.addListener(map, 'click', function(event) {
         if(marker_contador == 0){
             marker[0].setPosition(event.latLng);
@@ -122,7 +130,7 @@ function desenharRota(){
         if(marker_contador < 2){
             marker_contador++;
         }
-    });
+    });   
 }
 
 function carregarPontos() {   

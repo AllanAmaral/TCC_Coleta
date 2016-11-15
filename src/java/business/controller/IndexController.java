@@ -97,6 +97,7 @@ public class IndexController extends GenericController implements Serializable {
             }
             
             geradorJson.writeEnd().close();
+            
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }

@@ -2,6 +2,7 @@ package business.controller;
 
 import business.objects.Lixeira;
 import java.math.BigDecimal;
+import javax.servlet.http.HttpServlet;
 
 public class GenericController {
     

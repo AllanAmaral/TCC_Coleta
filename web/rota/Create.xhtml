@@ -14,6 +14,19 @@
                 <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
             </h:panelGroup>
             <h:form>
+                <table style="width:100%;">
+                    <tr>
+                        <th style="width:60%;vertical-align: top;">      
+                            <div id="mapaRota" style="height: 500px; width: 700px"></div>
+                        </th>
+                        <th>
+                            <h:commandLink value="Atualizar Mapa Otimizado" action="#{rotaController.definirLixeirasRotasOtimizada()}" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
+                            <div id="trajeto-texto" style="overflow:auto; height: 400px;"></div>
+                            <input type="hidden" id="totalKm" name="totalKm"/>
+                            <input type="hidden" id="totalTempo" name="totalTempo"/>
+                        </th>
+                    </tr>
+                </table>
                 <h:panelGrid columns="2">
                     <h:outputLabel value="#{conf.CreateRotaLabel_caminhao}" for="caminhao" />
                     <h:inputText id="capacidadeLixeiraKg" value="#{rotaController.selected.idCaminhaoMotorista}" title="#{conf.CreateRotaTitle_caminhao}" />
@@ -21,13 +34,20 @@
                     <h:inputText id="latitude" value="#{rotaController.selected.idCaminhaoMotorista}" title="#{conf.CreateRotaTitle_motorista}" />
                 </h:panelGrid>
                 <br />
-                <h:commandButton action="#{rotaController.create}" value="#{conf.CreateRotaSaveLink}"/>
+                <h:commandButton action="#{rotaController.create()}" value="#{conf.CreateRotaSaveLink}"/>
                 <br />
                 <br />
                 <h:commandLink action="#{rotaController.prepareList}" value="#{conf.CreateRotaShowAllLink}" immediate="true"/>
                 &nbsp;
                 <h:link outcome="/index" value="#{conf.CreateRotaIndexLink}"/>
             </h:form>
+            <script src="js/jquery.min.js"></script>
+            <!-- Maps API Javascript -->
+            <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDElz8A2mG5HykMbPdDFsQNAeabVErPXek&amp;sensor=false"></script>
+            <!-- Caixa de informação -->
+            <script src="js/infobox.js"></script>
+            <!-- Arquivo de inicialização do mapa -->
+            <script src="js/mapaRota.js"></script>
         </ui:define>
     </ui:composition>
 
