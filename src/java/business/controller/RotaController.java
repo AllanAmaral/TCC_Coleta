@@ -1,17 +1,30 @@
 package business.controller;
 
+import business.objects.Caminhao;
+import business.objects.CaminhaoMotorista;
 import business.objects.Lixeira;
+import business.objects.Motorista;
 import business.objects.Rota;
+import business.objects.RotaLixeira;
 import business.util.JsfUtil;
 import business.util.PaginationHelper;
+import dao.CaminhaoFacade;
+import dao.CaminhaoMotoristaFacade;
 import dao.LixeiraFacade;
+import dao.MotoristaFacade;
 import dao.RotaFacade;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
+import dao.RotaLixeiraFacade;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
@@ -21,13 +34,16 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.faces.event.ActionEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 import javax.json.Json;
-import javax.json.JsonObject;
 import javax.json.stream.JsonGenerator;
+import org.apache.jasper.tagplugins.jstl.ForEach;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 @Named("rotaController")
 @SessionScoped
@@ -39,10 +55,21 @@ public class RotaController extends GenericController implements Serializable {
     private DataModel items = null;
     private PaginationHelper pagination;
     private int selectedItemIndex;
+    private DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     @EJB
     private dao.LixeiraFacade lixeiraFacade;
     @EJB
     private dao.RotaFacade rotaFacade;
+    @EJB
+    private dao.CaminhaoFacade caminhaoFacade;
+    @EJB
+    private dao.MotoristaFacade motoristaFacade;
+    @EJB
+    private dao.CaminhaoMotoristaFacade caminhaoMotoristaFacade;
+    @EJB
+    private dao.RotaLixeiraFacade rotaLixeiraFacade;
+    private Caminhao caminhao;
+    private Motorista motorista;
 
     public RotaController() {
     }
@@ -61,6 +88,22 @@ public class RotaController extends GenericController implements Serializable {
     
     private RotaFacade getFacadeRota() {
         return rotaFacade;
+    }
+    
+    private MotoristaFacade getFacadeMotorista() {
+        return motoristaFacade;
+    }
+    
+    private CaminhaoFacade getFacadeCaminhao() {
+        return caminhaoFacade;
+    }
+    
+    public CaminhaoMotoristaFacade getFacadeCaminhaoMotorista() {
+        return caminhaoMotoristaFacade;
+    }
+    
+    public RotaLixeiraFacade getFacadeRotaLixeira() {
+        return rotaLixeiraFacade;
     }
 
     public PaginationHelper getPagination() {
@@ -105,12 +148,56 @@ public class RotaController extends GenericController implements Serializable {
             totalTempo = FacesContext.getCurrentInstance().
 		getExternalContext().getRequestParameterMap().get("totalTempo");
             
+            CaminhaoMotorista caminhaoMotorista = new CaminhaoMotorista();
+            caminhaoMotorista.setIdCaminhao(caminhao.getIdCaminhao());
+            caminhaoMotorista.setIdMotorista(motorista.getIdMotorista());
+            getFacadeCaminhaoMotorista().create(caminhaoMotorista);
+            
+            current = new Rota();
+            current.setIdCaminhaoMotorista(caminhaoMotorista.getIdCaminhaoMotorista());
+            current.setTotalKm(new BigDecimal(totalKm));
+            current.setTotalTempo(new BigDecimal(totalTempo));
+            current.setDataHora(new Date());
             getFacadeRota().create(current);
+            
+            criarRotasLixeiras();
+            
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/conf").getString("RotaCreated"));
             return prepareCreate();
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
             return null;
+        }
+    }
+    
+    private void criarRotasLixeiras() {
+        JSONArray jsonArray;
+        JSONParser parser = new JSONParser();
+        List<Lixeira> lixeiras = new ArrayList<>();
+
+        try {
+            jsonArray = (JSONArray) parser.parse(new FileReader(
+                            FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
+                            + "\\rota\\js\\lixeirasRota.json"));
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                lixeiras.add(getFacadeLixeira().find(((Long) jsonObject.get("Id")).intValue()));
+            }
+            
+            for(Lixeira l : lixeiras) {
+                RotaLixeira rl = new RotaLixeira();
+                rl.setIdLixeira(l.getIdLixeira());
+                rl.setIdRota(current.getIdRota());
+                rl.setDataHora(new Date());
+                getFacadeRotaLixeira().create(rl);
+            }
+        } 
+        catch (FileNotFoundException e) {
+                e.printStackTrace();
+        } catch (IOException e) {
+                e.printStackTrace();
+        } catch (ParseException e) {
+                e.printStackTrace();
         }
     }
 
@@ -273,6 +360,7 @@ public class RotaController extends GenericController implements Serializable {
 
                 if (cor == 1 && cont < 8) {
                     geradorJsonRota.writeStartObject()
+                        .write("Id", lixeira.getIdLixeira())
                         .write("Latitude", lixeira.getLatitude())
                         .write("Longitude", lixeira.getLongitude())
                         .writeEnd();
@@ -286,7 +374,7 @@ public class RotaController extends GenericController implements Serializable {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }
     }
-    
+    /*
     public void definirLixeirasRotasNormal() {
         try {           
             List<Lixeira> lixeiras = getFacadeLixeira().findAll();
@@ -315,7 +403,7 @@ public class RotaController extends GenericController implements Serializable {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }
     }
-    
+    */
     public void carregarLixeiras(List<Lixeira> lixeiras) {
         try {           
             int cor;
@@ -345,17 +433,31 @@ public class RotaController extends GenericController implements Serializable {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }
     }
+    
+    public List<Caminhao> getListCaminhao() {
+        return getFacadeCaminhao().findAll();
+    }
 
+    public List<Motorista> getListMotorista() {
+        return getFacadeMotorista().findAll();
+    }
+    
+    public Caminhao buscarCaminhao(Integer idCaminhaoMotorista) {
+        CaminhaoMotorista cm = getFacadeCaminhaoMotorista().find(idCaminhaoMotorista);
+        return getFacadeCaminhao().find(cm.getIdCaminhao());
+    }
+    
+    public Motorista buscarMotorista(Integer idCaminhaoMotorista) {
+        CaminhaoMotorista cm = getFacadeCaminhaoMotorista().find(idCaminhaoMotorista);
+        return getFacadeMotorista().find(cm.getIdMotorista());
+    }
+    
     public String getTotalKm() {
         return totalKm;
     }
 
     public void setTotalKm(String totalKm) {
         this.totalKm = totalKm;
-    }
-
-    public void actionTotalKm(String value) {
-        this.totalKm = value;
     }
     
     public String getTotalTempo() {
@@ -366,4 +468,23 @@ public class RotaController extends GenericController implements Serializable {
         this.totalTempo = totalTempo;
     }
     
+    public Caminhao getCaminhao() {
+        return caminhao;
+    }
+
+    public void setCaminhao(Caminhao caminhao) {
+        this.caminhao = caminhao;
+    }
+
+    public Motorista getMotorista() {
+        return motorista;
+    }
+
+    public void setMotorista(Motorista motorista) {
+        this.motorista = motorista;
+    }
+
+    public DateFormat getDf() {
+        return df;
+    }
 }

@@ -1,10 +1,13 @@
 package business.objects;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -30,14 +33,16 @@ public class Rota implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "ID_ROTA")
     private Integer idRota;
     @Column(name = "ID_CAMINHAO_MOTORISTA")
     private Integer idCaminhaoMotorista;
-    @Column(name = "DESCRICAO")
-    private String descricao;
+    @Column(name = "TOTAL_KM")
+    private BigDecimal totalKm;
+    @Column(name = "TOTAL_TEMPO")
+    private BigDecimal totalTempo;
     @Column(name = "DATA_HORA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataHora;
@@ -65,12 +70,20 @@ public class Rota implements Serializable {
         this.idCaminhaoMotorista = idCaminhaoMotorista;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public BigDecimal getTotalKm() {
+        return totalKm;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setTotalKm(BigDecimal totalKm) {
+        this.totalKm = totalKm;
+    }
+
+    public BigDecimal getTotalTempo() {
+        return totalTempo;
+    }
+
+    public void setTotalTempo(BigDecimal totalTempo) {
+        this.totalTempo = totalTempo;
     }
     
     public Date getDataHora() {

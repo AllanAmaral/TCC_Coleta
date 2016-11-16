@@ -30,19 +30,19 @@
                             <f:facet name="header">
                                 <h:outputText value="#{conf.ListRotaTitle_caminhao}"/>
                             </f:facet>
-                            <h:outputText value="#{item.idCaminhaoMotorista}"/>
+                            <h:outputText value="#{rotaController.buscarCaminhao(item.idCaminhaoMotorista)}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{conf.ListRotaTitle_motorista}"/>
                             </f:facet>
-                            <h:outputText value="#{item.idCaminhaoMotorista}"/>
+                            <h:outputText value="#{rotaController.buscarMotorista(item.idCaminhaoMotorista)}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{conf.ListRotaTitle_data}"/>
                             </f:facet>
-                            <h:outputText value="#{item.dataHora}"/>
+                            <h:outputText value="#{rotaController.df.format(item.dataHora)}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">

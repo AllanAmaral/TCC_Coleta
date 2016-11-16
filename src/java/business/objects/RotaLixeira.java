@@ -37,9 +37,8 @@ public class RotaLixeira implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID_ROTA_LIXEIRA")
     private Integer idRotaLixeira;
-    @Size(max = 7)
     @Column(name = "ID_ROTA")
-    private String idRota;
+    private Integer idRota;
     @Column(name = "ID_LIXEIRA")
     private Integer idLixeira;
     @Column(name = "DATA_HORA")
@@ -61,11 +60,11 @@ public class RotaLixeira implements Serializable {
         this.idRotaLixeira = idRotaLixeira;
     }
 
-    public String getIdRota() {
+    public Integer getIdRota() {
         return idRota;
     }
 
-    public void setIdRota(String idRota) {
+    public void setIdRota(Integer idRota) {
         this.idRota = idRota;
     }
 

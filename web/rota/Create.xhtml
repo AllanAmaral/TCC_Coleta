@@ -29,9 +29,13 @@
                 </table>
                 <h:panelGrid columns="2">
                     <h:outputLabel value="#{conf.CreateRotaLabel_caminhao}" for="caminhao" />
-                    <h:inputText id="capacidadeLixeiraKg" value="#{rotaController.selected.idCaminhaoMotorista}" title="#{conf.CreateRotaTitle_caminhao}" />
+                    <h:selectOneMenu id="caminhao" required="true" value="#{rotaController.caminhao}" title="#{conf.CreateRotaTitle_caminhao}">
+                        <f:selectItems value="#{rotaController.listCaminhao}" var="item" itemLabel="#{item.idCaminhao}" itemValue="#{item}"/>
+                    </h:selectOneMenu>
                     <h:outputLabel value="#{conf.CreateRotaLabel_motorista}" for="motorista" />
-                    <h:inputText id="latitude" value="#{rotaController.selected.idCaminhaoMotorista}" title="#{conf.CreateRotaTitle_motorista}" />
+                    <h:selectOneMenu id="motorista" required="true" value="#{rotaController.motorista}" title="#{conf.CreateRotaTitle_motorista}">
+                        <f:selectItems value="#{rotaController.listMotorista}"  var="item" itemLabel="#{item.nomeMotorista}" itemValue="#{item}"/>
+                    </h:selectOneMenu>
                 </h:panelGrid>
                 <br />
                 <h:commandButton action="#{rotaController.create()}" value="#{conf.CreateRotaSaveLink}"/>
