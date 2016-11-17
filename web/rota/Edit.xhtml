@@ -16,10 +16,14 @@
             <h:form>
                 <h:panelGrid columns="2">
                     <h:outputLabel value="#{conf.EditRotaLabel_caminhao}" for="caminhao" />
-                    <h:inputText id="caminhao" value="#{rotaController.selected.idCaminhaoMotorista}" title="#{conf.EditRotaTitle_caminhao}" />
+                    <h:selectOneMenu id="caminhao" required="true" value="#{rotaController.caminhao}" title="#{conf.EditRotaTitle_caminhao}">
+                        <f:selectItems value="#{rotaController.listCaminhao}" var="item" itemLabel="#{item.idCaminhao}" itemValue="#{item}"/>
+                    </h:selectOneMenu>
                     <h:outputLabel value="#{conf.EditRotaLabel_motorista}" for="motorista" />
-                    <h:inputText id="motorista" value="#{rotaController.selected.idCaminhaoMotorista}" title="#{conf.EditRotaTitle_motorista}" />
-               </h:panelGrid>
+                    <h:selectOneMenu id="motorista" required="true" value="#{rotaController.motorista}" title="#{conf.EditRotaTitle_motorista}">
+                        <f:selectItems value="#{rotaController.listMotorista}"  var="item" itemLabel="#{item.nomeMotorista}" itemValue="#{item}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
                 <br />
                 <h:commandButton action="#{rotaController.update}" value="#{conf.EditRotaSaveLink}"/>
                 <br />

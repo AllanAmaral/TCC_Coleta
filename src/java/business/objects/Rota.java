@@ -14,7 +14,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -43,6 +42,8 @@ public class Rota implements Serializable {
     private BigDecimal totalKm;
     @Column(name = "TOTAL_TEMPO")
     private BigDecimal totalTempo;
+    @Column(name = "ORDEM_COLETA")
+    private String ordemColeta;
     @Column(name = "DATA_HORA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataHora;
@@ -84,6 +85,14 @@ public class Rota implements Serializable {
 
     public void setTotalTempo(BigDecimal totalTempo) {
         this.totalTempo = totalTempo;
+    }
+
+    public String getOrdemColeta() {
+        return ordemColeta;
+    }
+
+    public void setOrdemColeta(String ordemColeta) {
+        this.ordemColeta = ordemColeta;
     }
     
     public Date getDataHora() {

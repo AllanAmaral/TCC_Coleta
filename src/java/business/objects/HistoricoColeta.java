@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "HistoricoColeta.findByIdHistoricoColeta", query = "SELECT h FROM HistoricoColeta h WHERE h.idHistoricoColeta = :idHistoricoColeta"),
     @NamedQuery(name = "HistoricoColeta.findByIdLixeira", query = "SELECT h FROM HistoricoColeta h WHERE h.idLixeira = :idLixeira"),
     @NamedQuery(name = "HistoricoColeta.findByIdCaminhaoMotorista", query = "SELECT h FROM HistoricoColeta h WHERE h.idCaminhaoMotorista = :idCaminhaoMotorista"),
+    @NamedQuery(name = "HistoricoColeta.findByIdRota", query = "SELECT h FROM HistoricoColeta h WHERE h.idRota = :idRota"),
     @NamedQuery(name = "HistoricoColeta.findByColetadoLixeiraKg", query = "SELECT h FROM HistoricoColeta h WHERE h.coletadoLixeiraKg = :coletadoLixeiraKg"),
     @NamedQuery(name = "HistoricoColeta.findByDataHora", query = "SELECT h FROM HistoricoColeta h WHERE h.dataHora = :dataHora")})
 public class HistoricoColeta implements Serializable {
@@ -42,7 +43,8 @@ public class HistoricoColeta implements Serializable {
     private Integer idLixeira;
     @Column(name = "ID_CAMINHAO_MOTORISTA")
     private Integer idCaminhaoMotorista;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "ID_ROTA")
+    private Integer idRota;
     @Column(name = "COLETADO_LIXEIRA_KG")
     private BigDecimal coletadoLixeiraKg;
     @Column(name = "CHEIO_VOLUME")
@@ -82,6 +84,14 @@ public class HistoricoColeta implements Serializable {
         this.idCaminhaoMotorista = idCaminhaoMotorista;
     }
 
+    public Integer getIdRota() {
+        return idRota;
+    }
+
+    public void setIdRota(Integer idRota) {
+        this.idRota = idRota;
+    }
+    
     public BigDecimal getColetadoLixeiraKg() {
         return coletadoLixeiraKg;
     }

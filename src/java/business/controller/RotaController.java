@@ -52,6 +52,7 @@ public class RotaController extends GenericController implements Serializable {
     private Rota current;
     private String totalKm;
     private String totalTempo;
+    private String ordemColeta;
     private DataModel items = null;
     private PaginationHelper pagination;
     private int selectedItemIndex;
@@ -147,7 +148,24 @@ public class RotaController extends GenericController implements Serializable {
 		getExternalContext().getRequestParameterMap().get("totalKm");
             totalTempo = FacesContext.getCurrentInstance().
 		getExternalContext().getRequestParameterMap().get("totalTempo");
+            ordemColeta = FacesContext.getCurrentInstance().
+		getExternalContext().getRequestParameterMap().get("ordemColeta");
             
+            JSONArray jsonArray;
+            JSONParser parser = new JSONParser();
+            String[] ordem = ordemColeta.split(",");
+            String ordemLixeiras = "";
+
+            jsonArray = (JSONArray) parser.parse(new FileReader(
+                            FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
+                            + "\\rota\\js\\lixeirasRota.json"));
+            
+            for (int i = 0; i < ordem.length; i++) {
+                JSONObject jsonObject = (JSONObject) jsonArray.get(Integer.valueOf(ordem[i]));
+                ordemLixeiras += jsonObject.get("Id");
+                if (i < (ordem.length-1)) ordemLixeiras += ",";
+            }
+
             CaminhaoMotorista caminhaoMotorista = new CaminhaoMotorista();
             caminhaoMotorista.setIdCaminhao(caminhao.getIdCaminhao());
             caminhaoMotorista.setIdMotorista(motorista.getIdMotorista());
@@ -157,58 +175,49 @@ public class RotaController extends GenericController implements Serializable {
             current.setIdCaminhaoMotorista(caminhaoMotorista.getIdCaminhaoMotorista());
             current.setTotalKm(new BigDecimal(totalKm));
             current.setTotalTempo(new BigDecimal(totalTempo));
+            current.setOrdemColeta(ordemLixeiras);
             current.setDataHora(new Date());
             getFacadeRota().create(current);
             
-            criarRotasLixeiras();
+            criarRotasLixeiras(jsonArray);
             
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/conf").getString("RotaCreated"));
             return prepareCreate();
-        } catch (Exception e) {
+        } catch (IOException | ParseException e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
             return null;
         }
     }
     
-    private void criarRotasLixeiras() {
-        JSONArray jsonArray;
-        JSONParser parser = new JSONParser();
-        List<Lixeira> lixeiras = new ArrayList<>();
-
-        try {
-            jsonArray = (JSONArray) parser.parse(new FileReader(
-                            FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
-                            + "\\rota\\js\\lixeirasRota.json"));
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                lixeiras.add(getFacadeLixeira().find(((Long) jsonObject.get("Id")).intValue()));
-            }
+    private void criarRotasLixeiras(JSONArray jsonArray) {
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+            Lixeira l = getFacadeLixeira().find(((Long) jsonObject.get("Id")).intValue());
             
-            for(Lixeira l : lixeiras) {
-                RotaLixeira rl = new RotaLixeira();
-                rl.setIdLixeira(l.getIdLixeira());
-                rl.setIdRota(current.getIdRota());
-                rl.setDataHora(new Date());
-                getFacadeRotaLixeira().create(rl);
-            }
-        } 
-        catch (FileNotFoundException e) {
-                e.printStackTrace();
-        } catch (IOException e) {
-                e.printStackTrace();
-        } catch (ParseException e) {
-                e.printStackTrace();
+            RotaLixeira rl = new RotaLixeira();
+            rl.setIdLixeira(l.getIdLixeira());
+            rl.setIdRota(current.getIdRota());
+            rl.setDataHora(new Date());
+            getFacadeRotaLixeira().create(rl);
         }
     }
 
     public String prepareEdit() {
         current = (Rota) getItems().getRowData();
+        setCaminhao(buscarCaminhao(current.getIdCaminhaoMotorista()));
+        setMotorista(buscarMotorista(current.getIdCaminhaoMotorista()));
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "Edit";
     }
 
     public String update() {
         try {
+            CaminhaoMotorista cm = getFacadeCaminhaoMotorista().find(current.getIdCaminhaoMotorista());
+            cm.setIdCaminhao(caminhao.getIdCaminhao());
+            cm.setIdMotorista(motorista.getIdMotorista());
+            cm.setDataHora(new Date());
+            getFacadeCaminhaoMotorista().edit(cm);
+            
             getFacadeRota().edit(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/conf").getString("RotaUpdated"));
             return "View";
@@ -443,11 +452,13 @@ public class RotaController extends GenericController implements Serializable {
     }
     
     public Caminhao buscarCaminhao(Integer idCaminhaoMotorista) {
+        if (idCaminhaoMotorista == null) return null;
         CaminhaoMotorista cm = getFacadeCaminhaoMotorista().find(idCaminhaoMotorista);
         return getFacadeCaminhao().find(cm.getIdCaminhao());
     }
     
     public Motorista buscarMotorista(Integer idCaminhaoMotorista) {
+        if (idCaminhaoMotorista == null) return null;
         CaminhaoMotorista cm = getFacadeCaminhaoMotorista().find(idCaminhaoMotorista);
         return getFacadeMotorista().find(cm.getIdMotorista());
     }
@@ -466,6 +477,14 @@ public class RotaController extends GenericController implements Serializable {
 
     public void setTotalTempo(String totalTempo) {
         this.totalTempo = totalTempo;
+    }
+
+    public String getOrdemColeta() {
+        return ordemColeta;
+    }
+
+    public void setOrdemColeta(String ordemColeta) {
+        this.ordemColeta = ordemColeta;
     }
     
     public Caminhao getCaminhao() {

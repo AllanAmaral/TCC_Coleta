@@ -6,6 +6,7 @@ import business.util.PaginationHelper;
 import dao.CaminhaoFacade;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.inject.Named;

@@ -21,12 +21,14 @@
                     <h:outputText value="#{rotaController.selected.idCaminhaoMotorista}" title="#{conf.ViewRotaTitle_caminhao}"/>
                     <h:outputText value="#{conf.ViewRotaLabel_motorista}"/>
                     <h:outputText value="#{rotaController.selected.idCaminhaoMotorista}" title="#{conf.ViewRotaTitle_motorista}"/>
-                    <h:outputText value="#{conf.ViewRotaLabel_descricao}"/>
-                    <h:outputText value="#{rotaController.selected.totalKm}" title="#{conf.ViewRotaTitle_descricao}"/>
-                    <h:outputText value="#{conf.ViewRotaLabel_descricao}"/>
-                    <h:outputText value="#{rotaController.selected.totalTempo}" title="#{conf.ViewRotaTitle_descricao}"/>
+                    <h:outputText value="#{conf.ViewRotaLabel_totalKm}"/>
+                    <h:outputText value="#{rotaController.selected.totalKm}" title="#{conf.ViewRotaTitle_totalKm}"/>
+                    <h:outputText value="#{conf.ViewRotaLabel_totalTempo}"/>
+                    <h:outputText value="#{rotaController.selected.totalTempo}" title="#{conf.ViewRotaTitle_totalTempo}"/>
+                    <h:outputText value="#{conf.ViewRotaLabel_ordemColeta}"/>
+                    <h:outputText value="#{rotaController.selected.ordemColeta}" title="#{conf.ViewRotaTitle_ordemColeta}"/>
                     <h:outputText value="#{conf.ViewRotaLabel_data}"/>
-                    <h:outputText value="#{rotaController.selected.dataHora}" title="#{conf.ViewRotaTitle_data}"/>
+                    <h:outputText value="#{rotaController.df.format(rotaController.selected.dataHora)}" title="#{conf.ViewRotaTitle_data}"/>
                 </h:panelGrid>
                 <br />
                 <h:commandLink action="#{rotaController.destroyAndView}" value="#{conf.ViewRotaDestroyLink}"/>

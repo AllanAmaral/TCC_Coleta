@@ -81,9 +81,10 @@ function desenharRota(latitude_A, longitude_A, latitude_B, longitude_B){
                     totalKm += parseFloat(myroute.legs[i].distance.text.replace(',','.'));
                     totalTempo += parseInt(myroute.legs[i].duration.text);
             }
-
+            
             $('#totalKm').val(totalKm.toFixed(1).toString());
             $('#totalTempo').val(totalTempo.toString());
+            $('#ordemColeta').val(myroute.waypoint_order);
         }
     }); 
 
