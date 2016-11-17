@@ -65,6 +65,7 @@ function desenharRota(latitude_A, longitude_A, latitude_B, longitude_B){
         travelMode: google.maps.DirectionsTravelMode.DRIVING,
         provideRouteAlternatives: true,
         waypoints: waypoints,
+        optimizeWaypoints: true,
         drivingOptions: {
             departureTime: new Date(Date.now()),
             trafficModel: "pessimistic"
