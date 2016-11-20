@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{conf.CreateRotaTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <table style="width:100%;">
+                    <tr>
+                        <th style="width:60%;vertical-align: top;">      
+                            <div id="mapaRota" style="height: 500px; width: 700px"></div>
+                        </th>
+                        <th>
+                            <h:commandLink value="Atualizar Mapa Otimizado" action="#{rotaController.definirLixeirasRotasNormal()}" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
+                            <div id="trajeto-texto" style="overflow:auto; height: 400px;"></div>
+                            <input type="hidden" id="totalKm" name="totalKm"/>
+                            <input type="hidden" id="totalTempo" name="totalTempo"/>
+                            <input type="hidden" id="ordemColeta" name="ordemColeta"/>
+                        </th>
+                    </tr>
+                </table>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{conf.CreateRotaLabel_caminhao}" for="caminhao" />
+                    <h:selectOneMenu id="caminhao" required="true" value="#{rotaController.caminhao}" title="#{conf.CreateRotaTitle_caminhao}">
+                        <f:selectItems value="#{rotaController.listCaminhao}" var="item" itemLabel="#{item.idCaminhao}" itemValue="#{item}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{conf.CreateRotaLabel_motorista}" for="motorista" />
+                    <h:selectOneMenu id="motorista" required="true" value="#{rotaController.motorista}" title="#{conf.CreateRotaTitle_motorista}">
+                        <f:selectItems value="#{rotaController.listMotorista}"  var="item" itemLabel="#{item.nomeMotorista}" itemValue="#{item}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <br />
+                <h:commandButton action="#{rotaController.createR()}" value="#{conf.CreateRotaSaveLink}"/>
+                <br />
+                <br />
+                <h:commandLink action="#{rotaController.prepareList}" value="#{conf.CreateRotaShowAllLink}" immediate="true"/>
+                &nbsp;
+                <h:link outcome="/index" value="#{conf.CreateRotaIndexLink}"/>
+            </h:form>
+            <script src="js/jquery.min.js"></script>
+            <!-- Maps API Javascript -->
+            <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDElz8A2mG5HykMbPdDFsQNAeabVErPXek&amp;sensor=false"></script>
+            <!-- Caixa de informação -->
+            <script src="js/infobox.js"></script>
+            <!-- Arquivo de inicialização do mapa -->
+            <script src="js/mapaRotaR.js"></script>
+        </ui:define>
+    </ui:composition>
+
+</html>

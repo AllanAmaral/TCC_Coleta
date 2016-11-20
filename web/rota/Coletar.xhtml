@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{conf.EditRotaTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{conf.EditRotaLabel_caminhao}" for="caminhao" />
+                    <h:selectOneMenu id="caminhao" required="true" value="#{rotaController.caminhao}" title="#{conf.EditRotaTitle_caminhao}">
+                        <f:selectItems value="#{rotaController.listCaminhao}" var="item" itemLabel="#{item.idCaminhao}" itemValue="#{item}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{conf.EditRotaLabel_motorista}" for="motorista" />
+                    <h:selectOneMenu id="motorista" required="true" value="#{rotaController.motorista}" title="#{conf.EditRotaTitle_motorista}">
+                        <f:selectItems value="#{rotaController.listMotorista}"  var="item" itemLabel="#{item.nomeMotorista}" itemValue="#{item}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <br />
+                <h:commandButton action="#{rotaController.update}" value="#{conf.EditRotaSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{conf.EditRotaViewLink}"/>
+                &nbsp;
+                <h:commandLink action="#{rotaController.prepareList}" value="#{conf.EditRotaShowAllLink}" immediate="true"/>
+                &nbsp;
+                <h:link outcome="/index" value="#{conf.EditRotaIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

@@ -42,8 +42,7 @@
                                             <legend>Rotas</legend>
                                             <h:panelGrid columns="1" style="text-align: left;">
                                                 <h:link onclick="#{rotaController.definirLixeirasRotasOtimizada()}" outcome="/rota/Create" value="Criar Rota" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
-                                                <!--<h:link onclick="{rotaController.definirLixeirasRotasNormal()}" outcome="/rota/Create" value="Criar Rota Ruim" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
-                                                -->
+                                                <h:link onclick="#{rotaController.definirLixeirasRotasNormal()}" outcome="/rota/CreateR" value="Criar Rota Ruim" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
                                             </h:panelGrid>
                                         </fieldset>
                                     </th>
@@ -89,8 +88,6 @@
                 <h:link outcome="/historicoColeta/List" value="Históricos de Coletas"/>
                 &nbsp;
                 <h:link outcome="/rota/List" value="Rotas"/>
-                &nbsp;
-                <h:link outcome="/caminhaoLixeira/Create" value="Coletar"/>
             </h:form>
             <script src="js/jquery.min.js"></script>
             <!-- Maps API Javascript -->

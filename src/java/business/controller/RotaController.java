@@ -14,7 +14,6 @@ import dao.LixeiraFacade;
 import dao.MotoristaFacade;
 import dao.RotaFacade;
 import dao.RotaLixeiraFacade;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,7 +22,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -39,7 +37,6 @@ import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
-import org.apache.jasper.tagplugins.jstl.ForEach;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -142,54 +139,66 @@ public class RotaController extends GenericController implements Serializable {
         return "Create";
     }
 
-    public String create() {
+    public String createR() {
         try {
-            totalKm = FacesContext.getCurrentInstance().
-		getExternalContext().getRequestParameterMap().get("totalKm");
-            totalTempo = FacesContext.getCurrentInstance().
-		getExternalContext().getRequestParameterMap().get("totalTempo");
-            ordemColeta = FacesContext.getCurrentInstance().
-		getExternalContext().getRequestParameterMap().get("ordemColeta");
-            
             JSONArray jsonArray;
             JSONParser parser = new JSONParser();
-            String[] ordem = ordemColeta.split(",");
-            String ordemLixeiras = "";
-
             jsonArray = (JSONArray) parser.parse(new FileReader(
-                            FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
-                            + "\\rota\\js\\lixeirasRota.json"));
+                                FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
+                                + "\\rota\\js\\lixeirasRotaR.json"));
+            return createGeneric(jsonArray);
             
-            for (int i = 0; i < ordem.length; i++) {
-                JSONObject jsonObject = (JSONObject) jsonArray.get(Integer.valueOf(ordem[i]));
-                ordemLixeiras += jsonObject.get("Id");
-                if (i < (ordem.length-1)) ordemLixeiras += ",";
-            }
-
-            CaminhaoMotorista caminhaoMotorista = new CaminhaoMotorista();
-            caminhaoMotorista.setIdCaminhao(caminhao.getIdCaminhao());
-            caminhaoMotorista.setIdMotorista(motorista.getIdMotorista());
-            getFacadeCaminhaoMotorista().create(caminhaoMotorista);
-            
-            current = new Rota();
-            current.setIdCaminhaoMotorista(caminhaoMotorista.getIdCaminhaoMotorista());
-            current.setTotalKm(new BigDecimal(totalKm));
-            current.setTotalTempo(new BigDecimal(totalTempo));
-            current.setOrdemColeta(ordemLixeiras);
-            current.setDataHora(new Date());
-            getFacadeRota().create(current);
-            
-            criarRotasLixeiras(jsonArray);
-            
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/conf").getString("RotaCreated"));
-            return prepareCreate();
         } catch (IOException | ParseException e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
             return null;
         }
     }
     
-    private void criarRotasLixeiras(JSONArray jsonArray) {
+    public String create() {
+        try {
+            JSONArray jsonArray;
+            JSONParser parser = new JSONParser();
+            jsonArray = (JSONArray) parser.parse(new FileReader(
+                                FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
+                                + "\\rota\\js\\lixeirasRota.json"));
+            return createGeneric(jsonArray);
+            
+        } catch (IOException | ParseException e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
+            return null;
+        }
+    }
+    
+    private String createGeneric(JSONArray jsonArray) {
+        totalKm = FacesContext.getCurrentInstance().
+            getExternalContext().getRequestParameterMap().get("totalKm");
+        totalTempo = FacesContext.getCurrentInstance().
+            getExternalContext().getRequestParameterMap().get("totalTempo");
+        ordemColeta = FacesContext.getCurrentInstance().
+            getExternalContext().getRequestParameterMap().get("ordemColeta");
+
+        String[] ordem = ordemColeta.split(",");
+        String ordemLixeiras = "";
+
+        for (int i = 0; i < ordem.length; i++) {
+            JSONObject jsonObject = (JSONObject) jsonArray.get(Integer.valueOf(ordem[i]));
+            ordemLixeiras += jsonObject.get("Id");
+            if (i < (ordem.length-1)) ordemLixeiras += ",";
+        }
+
+        CaminhaoMotorista caminhaoMotorista = new CaminhaoMotorista();
+        caminhaoMotorista.setIdCaminhao(caminhao.getIdCaminhao());
+        caminhaoMotorista.setIdMotorista(motorista.getIdMotorista());
+        getFacadeCaminhaoMotorista().create(caminhaoMotorista);
+
+        current = new Rota();
+        current.setIdCaminhaoMotorista(caminhaoMotorista.getIdCaminhaoMotorista());
+        current.setTotalKm(new BigDecimal(totalKm));
+        current.setTotalTempo(new BigDecimal(totalTempo));
+        current.setOrdemColeta(ordemLixeiras);
+        current.setDataHora(new Date());
+        getFacadeRota().create(current);
+
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
             Lixeira l = getFacadeLixeira().find(((Long) jsonObject.get("Id")).intValue());
@@ -200,6 +209,9 @@ public class RotaController extends GenericController implements Serializable {
             rl.setDataHora(new Date());
             getFacadeRotaLixeira().create(rl);
         }
+
+        JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/conf").getString("RotaCreated"));
+        return prepareCreate();
     }
 
     public String prepareEdit() {
@@ -249,6 +261,14 @@ public class RotaController extends GenericController implements Serializable {
         }
     }
 
+    public String prepareColeta() {
+        current = (Rota) getItems().getRowData();
+        setCaminhao(buscarCaminhao(current.getIdCaminhaoMotorista()));
+        setMotorista(buscarMotorista(current.getIdCaminhaoMotorista()));
+        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
+        return "Coletar";
+    }
+    
     private void performDestroy() {
         try {
             getFacadeRota().remove(current);
@@ -383,13 +403,13 @@ public class RotaController extends GenericController implements Serializable {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }
     }
-    /*
+    
     public void definirLixeirasRotasNormal() {
         try {           
             List<Lixeira> lixeiras = getFacadeLixeira().findAll();
             carregarLixeiras(lixeiras);
             String fileRota = FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
-                    + "\\rota\\js\\lixeirasRota.json";
+                    + "\\rota\\js\\lixeirasRotaR.json";
             FileOutputStream fosRota = new FileOutputStream(fileRota);
             JsonGenerator geradorJsonRota = Json.createGenerator(fosRota);
 
@@ -399,6 +419,7 @@ public class RotaController extends GenericController implements Serializable {
 
                 if (cont < 8) {
                     geradorJsonRota.writeStartObject()
+                        .write("Id", lixeira.getIdLixeira())
                         .write("Latitude", lixeira.getLatitude())
                         .write("Longitude", lixeira.getLongitude())
                         .writeEnd();
@@ -412,7 +433,7 @@ public class RotaController extends GenericController implements Serializable {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }
     }
-    */
+    
     public void carregarLixeiras(List<Lixeira> lixeiras) {
         try {           
             int cor;
