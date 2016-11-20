@@ -7,7 +7,7 @@
 
     <ui:composition template="/template.xhtml">
         <ui:define name="title">
-            <h:outputText value="#{conf.EditRotaTitle}"></h:outputText>
+            <h:outputText value="#{conf.ColetarRotaTitle}"></h:outputText>
         </ui:define>
         <ui:define name="body">
             <h:panelGroup id="messagePanel" layout="block">
@@ -15,24 +15,72 @@
             </h:panelGroup>
             <h:form>
                 <h:panelGrid columns="2">
-                    <h:outputLabel value="#{conf.EditRotaLabel_caminhao}" for="caminhao" />
-                    <h:selectOneMenu id="caminhao" required="true" value="#{rotaController.caminhao}" title="#{conf.EditRotaTitle_caminhao}">
-                        <f:selectItems value="#{rotaController.listCaminhao}" var="item" itemLabel="#{item.idCaminhao}" itemValue="#{item}"/>
-                    </h:selectOneMenu>
-                    <h:outputLabel value="#{conf.EditRotaLabel_motorista}" for="motorista" />
-                    <h:selectOneMenu id="motorista" required="true" value="#{rotaController.motorista}" title="#{conf.EditRotaTitle_motorista}">
-                        <f:selectItems value="#{rotaController.listMotorista}"  var="item" itemLabel="#{item.nomeMotorista}" itemValue="#{item}"/>
-                    </h:selectOneMenu>
+                    <h:outputText value="#{conf.ViewRotaLabel_idRota}"/>
+                    <h:outputText value="#{rotaController.selected.idRota}" title="#{conf.ViewRotaTitle_idLixeira}"/>
+                    <h:outputText value="#{conf.ViewRotaLabel_caminhao}"/>
+                    <h:outputText value="#{rotaController.caminhao}" title="#{conf.ViewRotaTitle_caminhao}"/>
+                    <h:outputText value="#{conf.ViewRotaLabel_motorista}"/>
+                    <h:outputText value="#{rotaController.motorista}" title="#{conf.ViewRotaTitle_motorista}"/>
+                    <h:outputText value="#{conf.ViewRotaLabel_totalKm}"/>
+                    <h:outputText value="#{rotaController.selected.totalKm}" title="#{conf.ViewRotaTitle_totalKm}"/>
+                    <h:outputText value="#{conf.ViewRotaLabel_totalTempo}"/>
+                    <h:outputText value="#{rotaController.selected.totalTempo}" title="#{conf.ViewRotaTitle_totalTempo}"/>
+                    <h:outputText value="#{conf.ViewRotaLabel_data}"/>
+                    <h:outputText value="#{rotaController.df.format(rotaController.selected.dataHora)}" title="#{conf.ViewRotaTitle_data}"/>
                 </h:panelGrid>
+                <h:panelGroup rendered="#{rotaController.lixeiras.size() > 0}">
+                    <h:dataTable value="#{rotaController.lixeiras}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListLixeiraTitle_idLixeira}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.idLixeira}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="Status"/>
+                            </f:facet>
+                            <h:graphicImage library="img" name="#{indexController.getImagemStatus(item)}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListLixeiraTitle_capacidadeLixeiraKg}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.capacidadeLixeiraKg}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListLixeiraTitle_coletadoLixeiraKg}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.coletadoLixeiraKg}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListLixeiraTitle_latitude}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.latitude}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListLixeiraTitle_longitude}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.longitude}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{rotaController.coletar(item.idLixeira)}" value="#{conf.ListColetarLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
                 <br />
-                <h:commandButton action="#{rotaController.update}" value="#{conf.EditRotaSaveLink}"/>
+                <h:commandButton action="#{rotaController.finalizarColeta()}" value="#{conf.ColetarRotaSaveLink}"/>
                 <br />
                 <br />
-                <h:link outcome="View" value="#{conf.EditRotaViewLink}"/>
+                <h:commandLink action="#{rotaController.prepareList}" value="#{conf.ColetarRotaShowAllLink}" immediate="true"/>
                 &nbsp;
-                <h:commandLink action="#{rotaController.prepareList}" value="#{conf.EditRotaShowAllLink}" immediate="true"/>
-                &nbsp;
-                <h:link outcome="/index" value="#{conf.EditRotaIndexLink}" />
+                <h:link outcome="/index" value="#{conf.ColetarRotaIndexLink}" />
             </h:form>
         </ui:define>
     </ui:composition>

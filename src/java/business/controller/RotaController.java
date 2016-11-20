@@ -2,6 +2,7 @@ package business.controller;
 
 import business.objects.Caminhao;
 import business.objects.CaminhaoMotorista;
+import business.objects.HistoricoColeta;
 import business.objects.Lixeira;
 import business.objects.Motorista;
 import business.objects.Rota;
@@ -10,6 +11,7 @@ import business.util.JsfUtil;
 import business.util.PaginationHelper;
 import dao.CaminhaoFacade;
 import dao.CaminhaoMotoristaFacade;
+import dao.HistoricoColetaFacade;
 import dao.LixeiraFacade;
 import dao.MotoristaFacade;
 import dao.RotaFacade;
@@ -22,6 +24,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -66,8 +69,13 @@ public class RotaController extends GenericController implements Serializable {
     private dao.CaminhaoMotoristaFacade caminhaoMotoristaFacade;
     @EJB
     private dao.RotaLixeiraFacade rotaLixeiraFacade;
+    @EJB
+    private dao.HistoricoColetaFacade historicoColetaFacade;
     private Caminhao caminhao;
     private Motorista motorista;
+    private HistoricoColeta historicoColeta;
+    List<HistoricoColeta> historicos;
+    List<Lixeira> lixeiras;
 
     public RotaController() {
     }
@@ -103,6 +111,10 @@ public class RotaController extends GenericController implements Serializable {
     public RotaLixeiraFacade getFacadeRotaLixeira() {
         return rotaLixeiraFacade;
     }
+    
+    public HistoricoColetaFacade getFacadeHistoricoColeta() {
+        return historicoColetaFacade;
+    }
 
     public PaginationHelper getPagination() {
         if (pagination == null) {
@@ -129,6 +141,8 @@ public class RotaController extends GenericController implements Serializable {
 
     public String prepareView() {
         current = (Rota) getItems().getRowData();
+        setCaminhao(buscarCaminhao(current.getIdCaminhaoMotorista()));
+        setMotorista(buscarMotorista(current.getIdCaminhaoMotorista()));
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "View";
     }
@@ -266,7 +280,58 @@ public class RotaController extends GenericController implements Serializable {
         setCaminhao(buscarCaminhao(current.getIdCaminhaoMotorista()));
         setMotorista(buscarMotorista(current.getIdCaminhaoMotorista()));
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
+        
+        lixeiras = buscarLixeirasColeta(current.getOrdemColeta());
+        historicos = new ArrayList<>();
+        
         return "Coletar";
+    }
+    
+    private List<Lixeira> buscarLixeirasColeta(String ordem) {
+        String[] ordemL = ordem.split(",");
+        List<Lixeira> result = new ArrayList<>(); 
+        
+        for(int i = 0; i < ordemL.length; i++) {
+            Lixeira lixeira = getFacadeLixeira().find(Integer.valueOf(ordemL[i]));
+            result.add(lixeira);
+        }
+        
+        return result;
+    }
+    
+    public void coletar(Integer idLixeira) {
+        historicoColeta = new HistoricoColeta();
+        historicoColeta.setIdCaminhaoMotorista(current.getIdCaminhaoMotorista());
+        historicoColeta.setIdRota(current.getIdRota());
+        
+        for(Lixeira lixeira : lixeiras) {
+            if (lixeira.getIdLixeira() == idLixeira) {
+                historicoColeta.setIdLixeira(lixeira.getIdLixeira());
+                historicoColeta.setCheioVolume("N");
+                historicoColeta.setColetadoLixeiraKg(lixeira.getColetadoLixeiraKg());
+                historicoColeta.setDataHora(new Date());
+                historicos.add(historicoColeta);
+                
+                lixeira.setColetadoLixeiraKg(BigDecimal.ZERO);
+            }
+        }
+    }
+    
+    public String finalizarColeta() {
+        try {
+            for (Lixeira l : lixeiras)
+                getFacadeLixeira().edit(l);
+            
+            for (HistoricoColeta h : historicos)
+                getFacadeHistoricoColeta().create(h);
+            
+            getFacadeRota().edit(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/conf").getString("RotaColetada"));
+            return "Coletar";
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
+            return null;
+        }
     }
     
     private void performDestroy() {
@@ -527,4 +592,29 @@ public class RotaController extends GenericController implements Serializable {
     public DateFormat getDf() {
         return df;
     }
+
+    public List<Lixeira> getLixeiras() {
+        return lixeiras;
+    }
+
+    public void setLixeiras(List<Lixeira> lixeiras) {
+        this.lixeiras = lixeiras;
+    }
+
+    public HistoricoColeta getHistoricoColeta() {
+        return historicoColeta;
+    }
+
+    public void setHistoricoColeta(HistoricoColeta historicoColeta) {
+        this.historicoColeta = historicoColeta;
+    }
+
+    public List<HistoricoColeta> getHistoricos() {
+        return historicos;
+    }
+
+    public void setHistoricos(List<HistoricoColeta> historicos) {
+        this.historicos = historicos;
+    }
+    
 }
