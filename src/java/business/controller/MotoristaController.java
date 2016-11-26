@@ -24,10 +24,11 @@ public class MotoristaController implements Serializable {
 
     private Motorista current;
     private DataModel items = null;
-    @EJB
-    private dao.MotoristaFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
+
+    @EJB
+    private dao.MotoristaFacade ejbFacade;
 
     public MotoristaController() {
     }

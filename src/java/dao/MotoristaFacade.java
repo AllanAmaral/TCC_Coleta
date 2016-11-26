@@ -23,5 +23,5 @@ public class MotoristaFacade extends AbstractFacade<Motorista> {
     public MotoristaFacade() {
         super(Motorista.class);
     }
-    
+
 }

@@ -24,11 +24,12 @@ public class RotaLixeiraController implements Serializable {
 
     private RotaLixeira current;
     private DataModel items = null;
-    @EJB
-    private dao.RotaLixeiraFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
 
+    @EJB
+    private dao.RotaLixeiraFacade ejbFacade;
+    
     public RotaLixeiraController() {
     }
 

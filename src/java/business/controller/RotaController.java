@@ -65,6 +65,14 @@ public class RotaController extends GenericController implements Serializable {
     private PaginationHelper pagination;
     private int selectedItemIndex;
     private DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    private Caminhao caminhao;
+    private Motorista motorista;
+    private HistoricoColeta historicoColeta;
+    List<HistoricoColeta> historicos;
+    List<Lixeira> lixeiras;
+    private Date dataInicial;
+    private Date dataFinal;
+
     @EJB
     private dao.LixeiraFacade lixeiraFacade;
     @EJB
@@ -79,14 +87,6 @@ public class RotaController extends GenericController implements Serializable {
     private dao.RotaLixeiraFacade rotaLixeiraFacade;
     @EJB
     private dao.HistoricoColetaFacade historicoColetaFacade;
-    private Caminhao caminhao;
-    private Motorista motorista;
-    private HistoricoColeta historicoColeta;
-    List<HistoricoColeta> historicos;
-    List<Lixeira> lixeiras;
-
-    private Date dataInicial;
-    private Date dataFinal;
 
     public RotaController() {
     }

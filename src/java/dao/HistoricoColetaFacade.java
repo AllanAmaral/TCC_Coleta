@@ -28,7 +28,7 @@ public class HistoricoColetaFacade extends AbstractFacade<HistoricoColeta> {
     public HistoricoColetaFacade() {
         super(HistoricoColeta.class);
     }
-    
+
     public List<HistoricoColeta> buscaHistoricoExcel(Date dataInicial, Date dataFinal) {
         CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
         Root<HistoricoColeta> hc = cq.from(HistoricoColeta.class);

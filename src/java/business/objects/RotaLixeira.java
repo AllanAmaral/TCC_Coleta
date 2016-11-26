@@ -32,15 +32,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class RotaLixeira implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @Size(max = 5)
     @Column(name = "ID_ROTA_LIXEIRA")
     private Integer idRotaLixeira;
+    
+    @Size(max = 5)
     @Column(name = "ID_ROTA")
     private Integer idRota;
+    
+    @Size(max = 5)
     @Column(name = "ID_LIXEIRA")
     private Integer idLixeira;
+    
     @Column(name = "DATA_HORA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataHora;
@@ -108,5 +115,5 @@ public class RotaLixeira implements Serializable {
     public String toString() {
         return "business.objects.RotaLixeira[ idRotaLixeira=" + idRotaLixeira + " ]";
     }
-    
+
 }

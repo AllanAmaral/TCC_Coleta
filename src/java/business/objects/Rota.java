@@ -14,6 +14,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,23 +33,34 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Rota implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @Size(max = 5)
     @Column(name = "ID_ROTA")
     private Integer idRota;
+    
+    @Size(max = 5)
     @Column(name = "ID_CAMINHAO_MOTORISTA")
     private Integer idCaminhaoMotorista;
+    
     @Column(name = "TOTAL_KM")
+    @Digits(integer = 8, fraction = 2)
     private BigDecimal totalKm;
+    
     @Column(name = "TOTAL_TEMPO")
+    @Digits(integer = 8, fraction = 2)
     private BigDecimal totalTempo;
+    
+    @Size(max = 255)
     @Column(name = "ORDEM_COLETA")
     private String ordemColeta;
+    
     @Column(name = "DATA_HORA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataHora;
-    
+
     public Rota() {
     }
 
@@ -94,7 +107,7 @@ public class Rota implements Serializable {
     public void setOrdemColeta(String ordemColeta) {
         this.ordemColeta = ordemColeta;
     }
-    
+
     public Date getDataHora() {
         return dataHora;
     }
@@ -102,7 +115,7 @@ public class Rota implements Serializable {
     public void setDataHora(Date dataHora) {
         this.dataHora = dataHora;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -127,5 +140,5 @@ public class Rota implements Serializable {
     public String toString() {
         return "business.objects.Rota[ idRota=" + idRota + " ]";
     }
-    
+
 }

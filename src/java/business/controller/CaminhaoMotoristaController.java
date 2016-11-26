@@ -24,10 +24,11 @@ public class CaminhaoMotoristaController implements Serializable {
 
     private CaminhaoMotorista current;
     private DataModel items = null;
-    @EJB
-    private dao.CaminhaoMotoristaFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
+
+    @EJB
+    private dao.CaminhaoMotoristaFacade ejbFacade;
 
     public CaminhaoMotoristaController() {
     }

@@ -32,16 +32,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class CaminhaoLixeira implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @Size(max = 5)
     @Column(name = "ID_CAMINHAO_LIXEIRA")
     private Integer idCaminhaoLixeira;
+    
     @Size(max = 7)
     @Column(name = "ID_CAMINHAO")
     private String idCaminhao;
+    
+    @Size(max = 5)
     @Column(name = "ID_LIXEIRA")
     private Integer idLixeira;
+    
     @Column(name = "DATA_HORA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataHora;

@@ -6,7 +6,6 @@ import business.util.PaginationHelper;
 import dao.CaminhaoFacade;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -25,10 +24,11 @@ public class CaminhaoController implements Serializable {
 
     private Caminhao current;
     private DataModel items = null;
-    @EJB
-    private dao.CaminhaoFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
+
+    @EJB
+    private dao.CaminhaoFacade ejbFacade;
 
     public CaminhaoController() {
     }

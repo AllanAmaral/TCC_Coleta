@@ -23,5 +23,5 @@ public class CaminhaoFacade extends AbstractFacade<Caminhao> {
     public CaminhaoFacade() {
         super(Caminhao.class);
     }
-    
+
 }

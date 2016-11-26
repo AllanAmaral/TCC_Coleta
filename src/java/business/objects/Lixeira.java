@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -30,23 +32,33 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Lixeira implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID_LIXEIRA")
     private Integer idLixeira;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    
     @Column(name = "CAPACIDADE_LIXEIRA_KG")
+    @Digits(integer = 8, fraction = 2)
     private BigDecimal capacidadeLixeiraKg;
+    
     @Column(name = "COLETADO_LIXEIRA_KG")
+    @Digits(integer = 8, fraction = 2)
     private BigDecimal coletadoLixeiraKg;
+    
     @Column(name = "LATITUDE")
+    @Digits(integer = 8, fraction = 10)
     private BigDecimal latitude;
+    
     @Column(name = "LONGITUDE")
+    @Digits(integer = 8, fraction = 10)
     private BigDecimal longitude;
+    
+    @Size(max = 1)
     @Column(name = "CHEIO_VOLUME")
     private String cheioVolume;
-    
+
     public Lixeira() {
     }
 
@@ -126,5 +138,5 @@ public class Lixeira implements Serializable {
     public String toString() {
         return "business.objects.Lixeira[ idLixeira=" + idLixeira + " ]";
     }
-    
+
 }

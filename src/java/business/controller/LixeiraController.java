@@ -1,8 +1,6 @@
 package business.controller;
 
 import business.dto.LixeiraColetadaDTO;
-import business.objects.CaminhaoMotorista;
-import business.objects.HistoricoColeta;
 import business.objects.Lixeira;
 import business.util.JsfUtil;
 import business.util.PaginationHelper;
@@ -39,14 +37,14 @@ public class LixeiraController extends GenericController implements Serializable
 
     private Lixeira current;
     private DataModel items = null;
-    @EJB
-    private dao.LixeiraFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
-    
     private DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private Date dataInicial;
     private Date dataFinal;
+
+    @EJB
+    private dao.LixeiraFacade ejbFacade;
 
     public LixeiraController() {
     }
@@ -325,7 +323,7 @@ public class LixeiraController extends GenericController implements Serializable
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }
     }
-    
+
     public DateFormat getDf() {
         return df;
     }
@@ -349,6 +347,5 @@ public class LixeiraController extends GenericController implements Serializable
     public void setDataFinal(Date dataFinal) {
         this.dataFinal = dataFinal;
     }
-    
-    
+
 }

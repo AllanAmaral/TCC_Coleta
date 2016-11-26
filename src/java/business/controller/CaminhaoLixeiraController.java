@@ -24,10 +24,11 @@ public class CaminhaoLixeiraController implements Serializable {
 
     private CaminhaoLixeira current;
     private DataModel items = null;
-    @EJB
-    private dao.CaminhaoLixeiraFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
+
+    @EJB
+    private dao.CaminhaoLixeiraFacade ejbFacade;
 
     public CaminhaoLixeiraController() {
     }

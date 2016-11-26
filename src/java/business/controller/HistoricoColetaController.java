@@ -44,6 +44,12 @@ public class HistoricoColetaController extends GenericController implements Seri
     private DataModel items = null;
     private PaginationHelper pagination;
     private int selectedItemIndex;
+    private Caminhao caminhao;
+    private Motorista motorista;
+    private DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    private Date dataInicial;
+    private Date dataFinal;
+
     @EJB
     private dao.HistoricoColetaFacade ejbFacade;
     @EJB
@@ -52,12 +58,6 @@ public class HistoricoColetaController extends GenericController implements Seri
     private dao.CaminhaoFacade caminhaoFacade;
     @EJB
     private dao.CaminhaoMotoristaFacade caminhaoMotoristaFacade;
-    private Caminhao caminhao;
-    private Motorista motorista;
-
-    private DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-    private Date dataInicial;
-    private Date dataFinal;
 
     public HistoricoColetaController() {
     }

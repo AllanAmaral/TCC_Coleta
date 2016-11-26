@@ -14,6 +14,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -34,21 +36,34 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class HistoricoColeta implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @Size(max = 5)
     @Column(name = "ID_HISTORICO_COLETA")
     private Integer idHistoricoColeta;
+    
+    @Size(max = 5)
     @Column(name = "ID_LIXEIRA")
     private Integer idLixeira;
+    
+    @Size(max = 5)
     @Column(name = "ID_CAMINHAO_MOTORISTA")
     private Integer idCaminhaoMotorista;
+    
+    @Size(max = 5)
     @Column(name = "ID_ROTA")
     private Integer idRota;
+    
     @Column(name = "COLETADO_LIXEIRA_KG")
+    @Digits(integer = 8, fraction = 2)
     private BigDecimal coletadoLixeiraKg;
+    
+    @Size(max = 1)
     @Column(name = "CHEIO_VOLUME")
     private String cheioVolume;
+    
     @Column(name = "DATA_HORA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataHora;
@@ -91,7 +106,7 @@ public class HistoricoColeta implements Serializable {
     public void setIdRota(Integer idRota) {
         this.idRota = idRota;
     }
-    
+
     public BigDecimal getColetadoLixeiraKg() {
         return coletadoLixeiraKg;
     }
@@ -140,5 +155,5 @@ public class HistoricoColeta implements Serializable {
     public String toString() {
         return "business.objects.HistoricoColeta[ idHistoricoColeta=" + idHistoricoColeta + " ]";
     }
-    
+
 }

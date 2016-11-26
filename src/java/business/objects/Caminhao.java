@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,16 +29,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Caminhao implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 7)
     @Column(name = "ID_CAMINHAO")
     private String idCaminhao;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    
     @Column(name = "CAPACIDADE_CAMINHAO_KG")
+    @Digits(integer=10, fraction=2)
     private BigDecimal capacidadeCaminhaoKg;
+    
     @Column(name = "COLETADO_CAMINHAO_KG")
+    @Digits(integer=10, fraction=2)
     private BigDecimal coletadoCaminhaoKg;
 
     public Caminhao() {
