@@ -40,20 +40,20 @@ public class HistoricoColeta implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Size(max = 5)
+    @Digits(integer = 5, fraction = 0)
     @Column(name = "ID_HISTORICO_COLETA")
     private Integer idHistoricoColeta;
     
-    @Size(max = 5)
     @Column(name = "ID_LIXEIRA")
+    @Digits(integer = 5, fraction = 0)
     private Integer idLixeira;
     
-    @Size(max = 5)
     @Column(name = "ID_CAMINHAO_MOTORISTA")
+    @Digits(integer = 5, fraction = 0)
     private Integer idCaminhaoMotorista;
     
-    @Size(max = 5)
     @Column(name = "ID_ROTA")
+    @Digits(integer = 5, fraction = 0)
     private Integer idRota;
     
     @Column(name = "COLETADO_LIXEIRA_KG")

@@ -13,6 +13,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -36,16 +37,16 @@ public class RotaLixeira implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Size(max = 5)
+    @Digits(integer = 5, fraction = 0)
     @Column(name = "ID_ROTA_LIXEIRA")
     private Integer idRotaLixeira;
     
-    @Size(max = 5)
     @Column(name = "ID_ROTA")
+    @Digits(integer = 5, fraction = 0)
     private Integer idRota;
     
-    @Size(max = 5)
     @Column(name = "ID_LIXEIRA")
+    @Digits(integer = 5, fraction = 0)
     private Integer idLixeira;
     
     @Column(name = "DATA_HORA")

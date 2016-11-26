@@ -36,6 +36,7 @@ public class Lixeira implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @Digits(integer = 5, fraction = 0)
     @Column(name = "ID_LIXEIRA")
     private Integer idLixeira;
     

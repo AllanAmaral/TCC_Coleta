@@ -37,12 +37,12 @@ public class Rota implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Size(max = 5)
+    @Digits(integer = 5, fraction = 0)
     @Column(name = "ID_ROTA")
     private Integer idRota;
     
-    @Size(max = 5)
     @Column(name = "ID_CAMINHAO_MOTORISTA")
+    @Digits(integer = 5, fraction = 0)
     private Integer idCaminhaoMotorista;
     
     @Column(name = "TOTAL_KM")

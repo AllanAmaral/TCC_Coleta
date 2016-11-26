@@ -13,6 +13,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -36,7 +37,7 @@ public class CaminhaoLixeira implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Size(max = 5)
+    @Digits(integer = 5, fraction = 0)
     @Column(name = "ID_CAMINHAO_LIXEIRA")
     private Integer idCaminhaoLixeira;
     
@@ -44,8 +45,8 @@ public class CaminhaoLixeira implements Serializable {
     @Column(name = "ID_CAMINHAO")
     private String idCaminhao;
     
-    @Size(max = 5)
     @Column(name = "ID_LIXEIRA")
+    @Digits(integer = 5, fraction = 0)
     private Integer idLixeira;
     
     @Column(name = "DATA_HORA")

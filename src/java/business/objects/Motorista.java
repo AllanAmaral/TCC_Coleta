@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -30,7 +31,7 @@ public class Motorista implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(max = 5)
+    @Digits(integer = 5, fraction = 0)
     @Column(name = "ID_MOTORISTA")
     private Integer idMotorista;
     

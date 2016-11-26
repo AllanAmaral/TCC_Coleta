@@ -38,11 +38,11 @@ public class Caminhao implements Serializable {
     private String idCaminhao;
     
     @Column(name = "CAPACIDADE_CAMINHAO_KG")
-    @Digits(integer=10, fraction=2)
+    @Digits(integer=8, fraction=2)
     private BigDecimal capacidadeCaminhaoKg;
     
     @Column(name = "COLETADO_CAMINHAO_KG")
-    @Digits(integer=10, fraction=2)
+    @Digits(integer=8, fraction=2)
     private BigDecimal coletadoCaminhaoKg;
 
     public Caminhao() {
