@@ -15,18 +15,16 @@
             </h:panelGroup>
             <h:form>
                 <h:panelGrid columns="2">
-                    <h:outputText value="#{conf.ViewHistoricoColetaLabel_idHistoricoColeta}"/>
-                    <h:outputText value="#{historicoColetaController.selected.idHistoricoColeta}" title="#{conf.ViewHistoricoColetaTitle_idHistoricoColeta}"/>
                     <h:outputText value="#{conf.ViewHistoricoColetaLabel_idLixeira}"/>
                     <h:outputText value="#{historicoColetaController.selected.idLixeira}" title="#{conf.ViewHistoricoColetaTitle_idLixeira}"/>
-                    <h:outputText value="#{conf.ViewHistoricoColetaLabel_idCaminhaoMotorista}"/>
-                    <h:outputText value="#{historicoColetaController.selected.idCaminhaoMotorista}" title="#{conf.ViewHistoricoColetaTitle_idCaminhaoMotorista}"/>
+                    <h:outputText value="#{conf.ViewHistoricoColetaLabel_idCaminhao}"/>
+                    <h:outputText value="#{historicoColetaController.caminhao}" title="#{conf.ViewHistoricoColetaTitle_idCaminhao}"/>
+                    <h:outputText value="#{conf.ViewHistoricoColetaLabel_idMotorista}"/>
+                    <h:outputText value="#{historicoColetaController.motorista}" title="#{conf.ViewHistoricoColetaTitle_idMotorista}"/>
                     <h:outputText value="#{conf.ViewHistoricoColetaLabel_coletadoLixeiraKg}"/>
                     <h:outputText value="#{historicoColetaController.selected.coletadoLixeiraKg}" title="#{conf.ViewHistoricoColetaTitle_coletadoLixeiraKg}"/>
                     <h:outputText value="#{conf.ViewHistoricoColetaLabel_dataHora}"/>
-                    <h:outputText value="#{historicoColetaController.selected.dataHora}" title="#{conf.ViewHistoricoColetaTitle_dataHora}">
-                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
-                    </h:outputText>
+                    <h:outputText value="#{historicoColetaController.df.format(historicoColetaController.selected.dataHora)}" title="#{conf.ViewHistoricoColetaTitle_dataHora}"/>
                 </h:panelGrid>
                 <br />
                 <br />

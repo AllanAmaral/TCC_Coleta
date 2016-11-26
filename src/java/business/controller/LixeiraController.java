@@ -1,11 +1,19 @@
 package business.controller;
 
+import business.dto.LixeiraColetadaDTO;
+import business.objects.CaminhaoMotorista;
+import business.objects.HistoricoColeta;
 import business.objects.Lixeira;
 import business.util.JsfUtil;
 import business.util.PaginationHelper;
 import dao.LixeiraFacade;
+import java.io.ByteArrayOutputStream;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -17,10 +25,17 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.RichTextString;
 
 @Named("lixeiraController")
 @SessionScoped
-public class LixeiraController implements Serializable {
+public class LixeiraController extends GenericController implements Serializable {
 
     private Lixeira current;
     private DataModel items = null;
@@ -28,6 +43,10 @@ public class LixeiraController implements Serializable {
     private dao.LixeiraFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
+    
+    private DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    private Date dataInicial;
+    private Date dataFinal;
 
     public LixeiraController() {
     }
@@ -231,4 +250,105 @@ public class LixeiraController implements Serializable {
         }
 
     }
+
+    public void emitirExcel() {
+        try {
+            validaDataLimite(dataInicial, dataFinal);
+
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            HSSFSheet firstSheet = workbook.createSheet("Lixeiras");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            List<LixeiraColetadaDTO> lista = getFacade().buscaLixeiraExcel(this.dataInicial, this.dataFinal);
+
+            if (lista == null || lista.isEmpty()) {
+                throw new Exception("Não existe lixeiras coletadas para esse período");
+            }
+
+            try {
+                HSSFFont font = workbook.createFont();
+                font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+
+                int i = 0;
+                HSSFRow row = firstSheet.createRow(i);
+
+                RichTextString text = new HSSFRichTextString("Identificador");
+                text.applyFont(font);
+                row.createCell(0).setCellValue(text);
+                text = new HSSFRichTextString("Capacidade");
+                text.applyFont(font);
+                row.createCell(1).setCellValue(text);
+                text = new HSSFRichTextString("Latitude");
+                text.applyFont(font);
+                row.createCell(2).setCellValue(text);
+                text = new HSSFRichTextString("Longitude");
+                text.applyFont(font);
+                row.createCell(3).setCellValue(text);
+                text = new HSSFRichTextString("Total Coletado no Período");
+                text.applyFont(font);
+                row.createCell(4).setCellValue(text);
+
+                i++;
+                for (LixeiraColetadaDTO lc : lista) {
+                    row = firstSheet.createRow(i);
+
+                    row.createCell(0).setCellValue(lc.getIdLixeira());
+                    row.createCell(1).setCellValue(lc.getCapacidadeLixeiraKg().toString());
+                    row.createCell(2).setCellValue(lc.getLatitude().toString());
+                    row.createCell(3).setCellValue(lc.getLongitude().toString());
+                    row.createCell(4).setCellValue(lc.getColetadoPeriodo().toString());
+
+                    i++;
+                }
+
+                firstSheet.autoSizeColumn(0);
+                firstSheet.autoSizeColumn(1);
+                firstSheet.autoSizeColumn(2);
+                firstSheet.autoSizeColumn(3);
+                firstSheet.autoSizeColumn(4);
+
+                workbook.write(baos);
+
+            } catch (Exception e) {
+                throw new Exception("Erro ao exportar arquivo: " + e.getMessage());
+            } finally {
+                baos.close();
+
+                HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+                response.setContentType("application/xls");
+                response.setHeader("Content-disposition", "attachment;filename=" + "RelatorioLixeirasColetas.xls");
+                response.getOutputStream().write(baos.toByteArray());
+                FacesContext.getCurrentInstance().responseComplete();
+            }
+
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
+        }
+    }
+    
+    public DateFormat getDf() {
+        return df;
+    }
+
+    public void setDf(DateFormat df) {
+        this.df = df;
+    }
+
+    public Date getDataInicial() {
+        return dataInicial;
+    }
+
+    public void setDataInicial(Date dataInicial) {
+        this.dataInicial = dataInicial;
+    }
+
+    public Date getDataFinal() {
+        return dataFinal;
+    }
+
+    public void setDataFinal(Date dataFinal) {
+        this.dataFinal = dataFinal;
+    }
+    
+    
 }

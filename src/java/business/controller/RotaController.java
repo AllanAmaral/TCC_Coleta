@@ -16,6 +16,7 @@ import dao.LixeiraFacade;
 import dao.MotoristaFacade;
 import dao.RotaFacade;
 import dao.RotaLixeiraFacade;
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -40,6 +41,13 @@ import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -77,6 +85,9 @@ public class RotaController extends GenericController implements Serializable {
     List<HistoricoColeta> historicos;
     List<Lixeira> lixeiras;
 
+    private Date dataInicial;
+    private Date dataFinal;
+
     public RotaController() {
     }
 
@@ -91,27 +102,27 @@ public class RotaController extends GenericController implements Serializable {
     private LixeiraFacade getFacadeLixeira() {
         return lixeiraFacade;
     }
-    
+
     private RotaFacade getFacadeRota() {
         return rotaFacade;
     }
-    
+
     private MotoristaFacade getFacadeMotorista() {
         return motoristaFacade;
     }
-    
+
     private CaminhaoFacade getFacadeCaminhao() {
         return caminhaoFacade;
     }
-    
+
     public CaminhaoMotoristaFacade getFacadeCaminhaoMotorista() {
         return caminhaoMotoristaFacade;
     }
-    
+
     public RotaLixeiraFacade getFacadeRotaLixeira() {
         return rotaLixeiraFacade;
     }
-    
+
     public HistoricoColetaFacade getFacadeHistoricoColeta() {
         return historicoColetaFacade;
     }
@@ -158,38 +169,38 @@ public class RotaController extends GenericController implements Serializable {
             JSONArray jsonArray;
             JSONParser parser = new JSONParser();
             jsonArray = (JSONArray) parser.parse(new FileReader(
-                                FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
-                                + "\\rota\\js\\lixeirasRotaR.json"));
+                    FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
+                    + "\\rota\\js\\lixeirasRotaR.json"));
             return createGeneric(jsonArray);
-            
+
         } catch (IOException | ParseException e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
             return null;
         }
     }
-    
+
     public String create() {
         try {
             JSONArray jsonArray;
             JSONParser parser = new JSONParser();
             jsonArray = (JSONArray) parser.parse(new FileReader(
-                                FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
-                                + "\\rota\\js\\lixeirasRota.json"));
+                    FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
+                    + "\\rota\\js\\lixeirasRota.json"));
             return createGeneric(jsonArray);
-            
+
         } catch (IOException | ParseException e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
             return null;
         }
     }
-    
+
     private String createGeneric(JSONArray jsonArray) {
         totalKm = FacesContext.getCurrentInstance().
-            getExternalContext().getRequestParameterMap().get("totalKm");
+                getExternalContext().getRequestParameterMap().get("totalKm");
         totalTempo = FacesContext.getCurrentInstance().
-            getExternalContext().getRequestParameterMap().get("totalTempo");
+                getExternalContext().getRequestParameterMap().get("totalTempo");
         ordemColeta = FacesContext.getCurrentInstance().
-            getExternalContext().getRequestParameterMap().get("ordemColeta");
+                getExternalContext().getRequestParameterMap().get("ordemColeta");
 
         String[] ordem = ordemColeta.split(",");
         String ordemLixeiras = "";
@@ -197,7 +208,9 @@ public class RotaController extends GenericController implements Serializable {
         for (int i = 0; i < ordem.length; i++) {
             JSONObject jsonObject = (JSONObject) jsonArray.get(Integer.valueOf(ordem[i]));
             ordemLixeiras += jsonObject.get("Id");
-            if (i < (ordem.length-1)) ordemLixeiras += ",";
+            if (i < (ordem.length - 1)) {
+                ordemLixeiras += ",";
+            }
         }
 
         CaminhaoMotorista caminhaoMotorista = new CaminhaoMotorista();
@@ -216,7 +229,7 @@ public class RotaController extends GenericController implements Serializable {
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
             Lixeira l = getFacadeLixeira().find(((Long) jsonObject.get("Id")).intValue());
-            
+
             RotaLixeira rl = new RotaLixeira();
             rl.setIdLixeira(l.getIdLixeira());
             rl.setIdRota(current.getIdRota());
@@ -243,7 +256,7 @@ public class RotaController extends GenericController implements Serializable {
             cm.setIdMotorista(motorista.getIdMotorista());
             cm.setDataHora(new Date());
             getFacadeCaminhaoMotorista().edit(cm);
-            
+
             getFacadeRota().edit(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/conf").getString("RotaUpdated"));
             return "View";
@@ -280,51 +293,53 @@ public class RotaController extends GenericController implements Serializable {
         setCaminhao(buscarCaminhao(current.getIdCaminhaoMotorista()));
         setMotorista(buscarMotorista(current.getIdCaminhaoMotorista()));
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        
+
         lixeiras = buscarLixeirasColeta(current.getOrdemColeta());
         historicos = new ArrayList<>();
-        
+
         return "Coletar";
     }
-    
+
     private List<Lixeira> buscarLixeirasColeta(String ordem) {
         String[] ordemL = ordem.split(",");
-        List<Lixeira> result = new ArrayList<>(); 
-        
-        for(int i = 0; i < ordemL.length; i++) {
+        List<Lixeira> result = new ArrayList<>();
+
+        for (int i = 0; i < ordemL.length; i++) {
             Lixeira lixeira = getFacadeLixeira().find(Integer.valueOf(ordemL[i]));
             result.add(lixeira);
         }
-        
+
         return result;
     }
-    
+
     public void coletar(Integer idLixeira) {
         historicoColeta = new HistoricoColeta();
         historicoColeta.setIdCaminhaoMotorista(current.getIdCaminhaoMotorista());
         historicoColeta.setIdRota(current.getIdRota());
-        
-        for(Lixeira lixeira : lixeiras) {
+
+        for (Lixeira lixeira : lixeiras) {
             if (lixeira.getIdLixeira() == idLixeira) {
                 historicoColeta.setIdLixeira(lixeira.getIdLixeira());
                 historicoColeta.setCheioVolume("N");
                 historicoColeta.setColetadoLixeiraKg(lixeira.getColetadoLixeiraKg());
                 historicoColeta.setDataHora(new Date());
                 historicos.add(historicoColeta);
-                
+
                 lixeira.setColetadoLixeiraKg(BigDecimal.ZERO);
             }
         }
     }
-    
+
     public String finalizarColeta() {
         try {
-            for (Lixeira l : lixeiras)
+            for (Lixeira l : lixeiras) {
                 getFacadeLixeira().edit(l);
-            
-            for (HistoricoColeta h : historicos)
+            }
+
+            for (HistoricoColeta h : historicos) {
                 getFacadeHistoricoColeta().create(h);
-            
+            }
+
             getFacadeRota().edit(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/conf").getString("RotaColetada"));
             return "Coletar";
@@ -333,7 +348,7 @@ public class RotaController extends GenericController implements Serializable {
             return null;
         }
     }
-    
+
     private void performDestroy() {
         try {
             getFacadeRota().remove(current);
@@ -436,9 +451,9 @@ public class RotaController extends GenericController implements Serializable {
         }
 
     }
-    
+
     public void definirLixeirasRotasOtimizada() {
-        try {           
+        try {
             List<Lixeira> lixeiras = getFacadeLixeira().findAll();
             carregarLixeiras(lixeiras);
             int cor;
@@ -454,23 +469,23 @@ public class RotaController extends GenericController implements Serializable {
 
                 if (cor == 1 && cont < 8) {
                     geradorJsonRota.writeStartObject()
-                        .write("Id", lixeira.getIdLixeira())
-                        .write("Latitude", lixeira.getLatitude())
-                        .write("Longitude", lixeira.getLongitude())
-                        .writeEnd();
+                            .write("Id", lixeira.getIdLixeira())
+                            .write("Latitude", lixeira.getLatitude())
+                            .write("Longitude", lixeira.getLongitude())
+                            .writeEnd();
                     cont++;
                 }
             }
-            
+
             geradorJsonRota.writeEnd().close();
-            
+
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }
     }
-    
+
     public void definirLixeirasRotasNormal() {
-        try {           
+        try {
             List<Lixeira> lixeiras = getFacadeLixeira().findAll();
             carregarLixeiras(lixeiras);
             String fileRota = FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
@@ -484,51 +499,138 @@ public class RotaController extends GenericController implements Serializable {
 
                 if (cont < 8) {
                     geradorJsonRota.writeStartObject()
-                        .write("Id", lixeira.getIdLixeira())
-                        .write("Latitude", lixeira.getLatitude())
-                        .write("Longitude", lixeira.getLongitude())
-                        .writeEnd();
+                            .write("Id", lixeira.getIdLixeira())
+                            .write("Latitude", lixeira.getLatitude())
+                            .write("Longitude", lixeira.getLongitude())
+                            .writeEnd();
                     cont++;
                 }
             }
-            
+
             geradorJsonRota.writeEnd().close();
-            
+
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }
     }
-    
+
     public void carregarLixeiras(List<Lixeira> lixeiras) {
-        try {           
+        try {
             int cor;
             String file = FacesContext.getCurrentInstance().getExternalContext().getRealPath("")
                     + "\\rota\\js\\pontos.json";
             FileOutputStream fos = new FileOutputStream(file);
             JsonGenerator geradorJson = Json.createGenerator(fos);
-            
+
             geradorJson.writeStartArray();
-            
+
             for (Lixeira lixeira : lixeiras) {
                 cor = getStatus(lixeira);
 
                 geradorJson.writeStartObject()
-                    .write("Id", lixeira.getIdLixeira())
-                    .write("Cor", cor)
-                    .write("Latitude", lixeira.getLatitude())
-                    .write("Longitude", lixeira.getLongitude())
-                    .write("Descricao", "Capacidade Kg: " + lixeira.getCapacidadeLixeiraKg()
-                                        + "\n" + "Coletado Kg: " + lixeira.getColetadoLixeiraKg())
-                    .writeEnd();
+                        .write("Id", lixeira.getIdLixeira())
+                        .write("Cor", cor)
+                        .write("Latitude", lixeira.getLatitude())
+                        .write("Longitude", lixeira.getLongitude())
+                        .write("Descricao", "Capacidade Kg: " + lixeira.getCapacidadeLixeiraKg()
+                                + "\n" + "Coletado Kg: " + lixeira.getColetadoLixeiraKg())
+                        .writeEnd();
             }
-            
+
             geradorJson.writeEnd().close();
-            
+
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
         }
     }
-    
+
+    public void emitirExcel() {
+        try {
+            validaDataLimite(dataInicial, dataFinal);
+
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            HSSFSheet firstSheet = workbook.createSheet("Rotas");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            List<Rota> lista = getFacadeRota().buscaRotasExcel(this.dataInicial, this.dataFinal);
+
+            if (lista == null || lista.isEmpty()) {
+                throw new Exception("Não existe rotas para esse período");
+            }
+
+            try {
+                HSSFFont font = workbook.createFont();
+                font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+
+                int i = 0;
+                HSSFRow row = firstSheet.createRow(i);
+
+                RichTextString text = new HSSFRichTextString("Identificador");
+                text.applyFont(font);
+                row.createCell(0).setCellValue(text);
+                text = new HSSFRichTextString("Caminhão");
+                text.applyFont(font);
+                row.createCell(1).setCellValue(text);
+                text = new HSSFRichTextString("Motorista");
+                text.applyFont(font);
+                row.createCell(2).setCellValue(text);
+                text = new HSSFRichTextString("Ordem da Coleta");
+                text.applyFont(font);
+                row.createCell(3).setCellValue(text);
+                text = new HSSFRichTextString("Km Total");
+                text.applyFont(font);
+                row.createCell(4).setCellValue(text);
+                text = new HSSFRichTextString("Tempo Total (min)");
+                text.applyFont(font);
+                row.createCell(5).setCellValue(text);
+                text = new HSSFRichTextString("Data");
+                text.applyFont(font);
+                row.createCell(6).setCellValue(text);
+
+                i++;
+                for (Rota rota : lista) {
+                    row = firstSheet.createRow(i);
+
+                    CaminhaoMotorista cm = getFacadeCaminhaoMotorista().find(rota.getIdCaminhaoMotorista());
+
+                    row.createCell(0).setCellValue(rota.getIdRota());
+                    row.createCell(1).setCellValue(cm.getIdCaminhao());
+                    row.createCell(2).setCellValue(getFacadeMotorista().find(cm.getIdMotorista()).getNomeMotorista());
+                    row.createCell(3).setCellValue(rota.getOrdemColeta());
+                    row.createCell(4).setCellValue(rota.getTotalKm().toString());
+                    row.createCell(5).setCellValue(rota.getTotalTempo().toString());
+                    row.createCell(6).setCellValue(df.format(rota.getDataHora()));
+
+                    i++;
+                }
+
+                firstSheet.autoSizeColumn(0);
+                firstSheet.autoSizeColumn(1);
+                firstSheet.autoSizeColumn(2);
+                firstSheet.autoSizeColumn(3);
+                firstSheet.autoSizeColumn(4);
+                firstSheet.autoSizeColumn(5);
+                firstSheet.autoSizeColumn(6);
+
+                workbook.write(baos);
+
+            } catch (Exception e) {
+                throw new Exception("Erro ao exportar arquivo: " + e.getMessage());
+            } finally {
+                baos.close();
+
+                HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+                response.setContentType("application/xls");
+                response.setHeader("Content-disposition", "attachment;filename=" + "RelatorioRotas.xls");
+                response.getOutputStream().write(baos.toByteArray());
+                FacesContext.getCurrentInstance().responseComplete();
+            }
+
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
+        }
+    }
+
     public List<Caminhao> getListCaminhao() {
         return getFacadeCaminhao().findAll();
     }
@@ -536,19 +638,23 @@ public class RotaController extends GenericController implements Serializable {
     public List<Motorista> getListMotorista() {
         return getFacadeMotorista().findAll();
     }
-    
+
     public Caminhao buscarCaminhao(Integer idCaminhaoMotorista) {
-        if (idCaminhaoMotorista == null) return null;
+        if (idCaminhaoMotorista == null) {
+            return null;
+        }
         CaminhaoMotorista cm = getFacadeCaminhaoMotorista().find(idCaminhaoMotorista);
         return getFacadeCaminhao().find(cm.getIdCaminhao());
     }
-    
+
     public Motorista buscarMotorista(Integer idCaminhaoMotorista) {
-        if (idCaminhaoMotorista == null) return null;
+        if (idCaminhaoMotorista == null) {
+            return null;
+        }
         CaminhaoMotorista cm = getFacadeCaminhaoMotorista().find(idCaminhaoMotorista);
         return getFacadeMotorista().find(cm.getIdMotorista());
     }
-    
+
     public String getTotalKm() {
         return totalKm;
     }
@@ -556,7 +662,7 @@ public class RotaController extends GenericController implements Serializable {
     public void setTotalKm(String totalKm) {
         this.totalKm = totalKm;
     }
-    
+
     public String getTotalTempo() {
         return totalTempo;
     }
@@ -572,7 +678,7 @@ public class RotaController extends GenericController implements Serializable {
     public void setOrdemColeta(String ordemColeta) {
         this.ordemColeta = ordemColeta;
     }
-    
+
     public Caminhao getCaminhao() {
         return caminhao;
     }
@@ -616,5 +722,21 @@ public class RotaController extends GenericController implements Serializable {
     public void setHistoricos(List<HistoricoColeta> historicos) {
         this.historicos = historicos;
     }
-    
+
+    public Date getDataInicial() {
+        return dataInicial;
+    }
+
+    public void setDataInicial(Date dataInicial) {
+        this.dataInicial = dataInicial;
+    }
+
+    public Date getDataFinal() {
+        return dataFinal;
+    }
+
+    public void setDataFinal(Date dataFinal) {
+        this.dataFinal = dataFinal;
+    }
+
 }

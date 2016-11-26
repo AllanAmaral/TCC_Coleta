@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
     <ui:composition template="/template.xhtml">
         <ui:define name="title">
@@ -34,9 +35,15 @@
                         </h:column>
                         <h:column>
                             <f:facet name="header">
-                                <h:outputText value="#{conf.ListHistoricoColetaTitle_idCaminhaoMotorista}"/>
+                                <h:outputText value="#{conf.ListHistoricoColetaTitle_idCaminhao}"/>
                             </f:facet>
-                            <h:outputText value="#{item.idCaminhaoMotorista}"/>
+                            <h:outputText value="#{historicoColetaController.buscarCaminhao(item.idCaminhaoMotorista)}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{conf.ListHistoricoColetaTitle_idMotorista}"/>
+                            </f:facet>
+                            <h:outputText value="#{historicoColetaController.buscarMotorista(item.idCaminhaoMotorista)}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
@@ -58,13 +65,20 @@
                             </f:facet>
                             <h:commandLink action="#{historicoColetaController.prepareView}" value="#{conf.ListHistoricoColetaViewLink}"/>
                             <h:outputText value=" "/>
-                            <h:commandLink action="#{historicoColetaController.prepareEdit}" value="#{conf.ListHistoricoColetaEditLink}"/>
-                            <h:outputText value=" "/>
-                            <h:commandLink action="#{historicoColetaController.destroy}" value="#{conf.ListHistoricoColetaDestroyLink}"/>
                         </h:column>
                     </h:dataTable>
                 </h:panelGroup>
                 <br />
+                <fieldset style="width: 30%">
+                    <legend>Relatório dos Históricos de Coleta</legend>
+                    <h:panelGrid columns="2" style="text-align: left; border: 0">
+                        <h:outputLabel value="Data Inicial"/>
+                        <p:calendar id="dtIni" value="#{historicoColetaController.dataInicial}" pattern="dd/MM/yyyy" mask="true"/>
+                        <h:outputLabel value="Data Final"/>
+                        <p:calendar id="dtFim" value="#{historicoColetaController.dataFinal}" pattern="dd/MM/yyyy" mask="true"/>
+                        <h:commandLink  value="Emitir" action="#{historicoColetaController.emitirExcel()}" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
+                    </h:panelGrid>
+                </fieldset>
                 <br />
                 <h:link outcome="/index" value="#{conf.ListHistoricoColetaIndexLink}"/>
             </h:form>
