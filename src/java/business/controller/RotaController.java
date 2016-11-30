@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -173,7 +175,7 @@ public class RotaController extends GenericController implements Serializable {
                     + "\\rota\\js\\lixeirasRotaR.json"));
             return createGeneric(jsonArray);
 
-        } catch (IOException | ParseException e) {
+        } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
             return null;
         }
@@ -188,13 +190,13 @@ public class RotaController extends GenericController implements Serializable {
                     + "\\rota\\js\\lixeirasRota.json"));
             return createGeneric(jsonArray);
 
-        } catch (IOException | ParseException e) {
+        } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/conf").getString("PersistenceErrorOccured"));
             return null;
         }
     }
 
-    private String createGeneric(JSONArray jsonArray) {
+    private String createGeneric(JSONArray jsonArray) throws Exception {
         totalKm = FacesContext.getCurrentInstance().
                 getExternalContext().getRequestParameterMap().get("totalKm");
         totalTempo = FacesContext.getCurrentInstance().
@@ -205,6 +207,9 @@ public class RotaController extends GenericController implements Serializable {
         String[] ordem = ordemColeta.split(",");
         String ordemLixeiras = "";
 
+        if (ordem == null || ordem.length < 2)
+            throw new Exception("Não existe lixeiras para coleta.");
+        
         for (int i = 0; i < ordem.length; i++) {
             JSONObject jsonObject = (JSONObject) jsonArray.get(Integer.valueOf(ordem[i]));
             ordemLixeiras += jsonObject.get("Id");
