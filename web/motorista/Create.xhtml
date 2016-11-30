@@ -21,7 +21,7 @@
                     <h:inputText id="nomeMotorista" value="#{motoristaController.selected.nomeMotorista}" title="#{conf.CreateMotoristaTitle_nomeMotorista}" />
                 </h:panelGrid>
                 <br />
-                <h:commandButton action="#{motoristaController.create}" value="#{conf.CreateMotoristaSaveLink}"/>
+                <h:commandLink action="#{motoristaController.create}" value="#{conf.CreateMotoristaSaveLink}" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
                 <br />
                 <br />
                 <h:commandLink action="#{motoristaController.prepareList}" value="#{conf.CreateMotoristaShowAllLink}" immediate="true"/>

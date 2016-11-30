@@ -655,6 +655,10 @@ public class RotaController extends GenericController implements Serializable {
         return getFacadeMotorista().find(cm.getIdMotorista());
     }
 
+    public boolean isColetar(BigDecimal coletado) {
+        return coletado.compareTo(BigDecimal.ZERO) > 0;
+    }
+    
     public String getTotalKm() {
         return totalKm;
     }

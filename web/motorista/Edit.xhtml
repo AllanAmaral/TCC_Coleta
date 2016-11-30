@@ -21,7 +21,7 @@
                     <h:inputText id="nomeMotorista" value="#{motoristaController.selected.nomeMotorista}" title="#{conf.EditMotoristaTitle_nomeMotorista}" />
                 </h:panelGrid>
                 <br />
-                <h:commandButton action="#{motoristaController.update}" value="#{conf.EditMotoristaSaveLink}"/>
+                <h:commandLink action="#{motoristaController.update}" value="#{conf.EditMotoristaSaveLink}" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
                 <br />
                 <br />
                 <h:link outcome="View" value="#{conf.EditMotoristaViewLink}"/>

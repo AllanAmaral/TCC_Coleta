@@ -70,12 +70,12 @@
                             <f:facet name="header">
                                 <h:outputText value="&nbsp;"/>
                             </f:facet>
-                            <h:commandLink action="#{rotaController.coletar(item.idLixeira)}" value="#{conf.ListColetarLink}"/>
+                            <h:commandLink action="#{rotaController.coletar(item.idLixeira)}" value="#{conf.ListColetarLink}" disabled="#{!rotaController.isColetar(item.coletadoLixeiraKg)}"/>
                         </h:column>
                     </h:dataTable>
                 </h:panelGroup>
                 <br />
-                <h:commandButton action="#{rotaController.finalizarColeta()}" value="#{conf.ColetarRotaSaveLink}"/>
+                <h:commandLink action="#{rotaController.finalizarColeta()}" value="#{conf.ColetarRotaSaveLink}" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
                 <br />
                 <br />
                 <h:commandLink action="#{rotaController.prepareList}" value="#{conf.ColetarRotaShowAllLink}" immediate="true"/>

@@ -21,7 +21,7 @@
                     <h:inputText id="capacidadeCaminhaoKg" value="#{caminhaoController.selected.capacidadeCaminhaoKg}" title="#{conf.EditCaminhaoTitle_capacidadeCaminhaoKg}" />
                 </h:panelGrid>
                 <br />
-                <h:commandButton action="#{caminhaoController.update}" value="#{conf.EditCaminhaoSaveLink}"/>
+                <h:commandLink action="#{caminhaoController.update}" value="#{conf.EditCaminhaoSaveLink}" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
                 <br />
                 <br />
                 <h:link outcome="View" value="#{conf.EditCaminhaoViewLink}"/>

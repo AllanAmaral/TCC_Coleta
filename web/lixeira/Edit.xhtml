@@ -23,7 +23,7 @@
                     <h:inputText id="longitude" value="#{lixeiraController.selected.longitude}" title="#{conf.EditLixeiraTitle_longitude}" />
                 </h:panelGrid>
                 <br />
-                <h:commandButton action="#{lixeiraController.update}" value="#{conf.EditLixeiraSaveLink}"/>
+                <h:commandLink action="#{lixeiraController.update}" value="#{conf.EditLixeiraSaveLink}" style="color: #af0000; border-width: 1; border: solid; text-decoration: none;"/>
                 <br />
                 <br />
                 <h:link outcome="View" value="#{conf.EditLixeiraViewLink}"/>
