@@ -207,7 +207,7 @@ public class RotaController extends GenericController implements Serializable {
         String[] ordem = ordemColeta.split(",");
         String ordemLixeiras = "";
 
-        if (ordem == null || ordem.length < 2)
+        if (ordem == null || ordem.length < 1 || ordem[0].equals(""))
             throw new Exception("Não existe lixeiras para coleta.");
         
         for (int i = 0; i < ordem.length; i++) {
